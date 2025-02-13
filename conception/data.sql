@@ -1,0 +1,1 @@
+insert into Utilisateur(mail,mdp) values ('fifaliana@gmail.com','aaa');

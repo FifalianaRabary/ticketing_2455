@@ -1,0 +1,378 @@
+here listen, so actually, this is a school project which consists of creating my own framework and we were instructed to create a class MySession in the framework side:
+package session;
+
+import jakarta.servlet.http.HttpSession;
+
+public class MySession {
+
+    private HttpSession session;
+
+    
+    
+
+    public MySession() {
+    }
+
+    public MySession(HttpSession session) 
+    {
+        this.session = session;
+    }
+
+    public Object get(String key) 
+    {
+        return session.getAttribute(key);
+    }
+
+    public void add(String key, Object objet) 
+    {
+        session.setAttribute(key, objet);
+    }
+
+    public void delete(String key) 
+    {
+        session.removeAttribute(key);
+    }
+
+    public boolean exists(String key) 
+    {
+        return session.getAttribute(key) != null;
+    }
+}
+
+we have a frontController on the framework side as well:
+package controller;
+
+import java.io.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Field;
+import java.util.Set;
+
+
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import scanner.*;
+import session.MySession;
+import annotations.*;
+
+import java.util.HashMap;
+import java.util.HashSet;
+
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import utils.*;
+import java.util.Set;
+
+public class FrontController extends HttpServlet {
+    HashMap<String, Mapping> annotatedControllerMethod = new HashMap<>();
+
+    public Set<Class<?>> getListeClassesAnnoteesController()throws ServletException
+    {
+        Set<Class<?>> listeControllerAnnote = new HashSet<>();
+        String packageName = getServletContext().getInitParameter("controller-package");
+        if (packageName == null) 
+        {
+            throw new ServletException("Controller-package ne se trouve pas dans le fichier .xml");
+        }
+        try 
+        {
+            listeControllerAnnote = ControllerScanner.getAnnotatedClasses(packageName, Controller.class);
+        } 
+        catch (IOException | ClassNotFoundException e) 
+        {
+            e.printStackTrace();
+            throw new ServletException( e);
+        }
+        return listeControllerAnnote;
+    }
+
+    @Override
+     public void init() throws ServletException 
+     {
+        Set<Class<?>> listeControllerAnnote = new HashSet<>();
+        listeControllerAnnote = getListeClassesAnnoteesController();
+        try
+        {
+            for(Class<?> annotatedClass : listeControllerAnnote)
+            {
+                List<Method> methods = Arrays.asList(annotatedClass.getDeclaredMethods());
+                for(Method meth : methods)
+                {
+                    if(meth.isAnnotationPresent(Get.class))
+                    {
+                        Mapping mapping = new Mapping(annotatedClass.getName(),meth.getName());
+                        String url = meth.getAnnotation(Get.class).url();
+                        if(annotatedControllerMethod.containsKey(url))
+                        {
+                            String errorMessage = "l'URL "+url+" est associé à plus d'une méthode";
+                            System.err.println(errorMessage);
+                            throw new ServletException(errorMessage);
+                        }
+                        else
+                        {
+                            annotatedControllerMethod.put(url,mapping);
+
+                        }
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            throw new ServletException(e);
+        }
+
+    }
+ 
+
+
+
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        String urlComplet = request.getRequestURI();
+        String contexte = request.getContextPath();
+        String urlEntree = Utils.getCleanUrl(urlComplet, contexte);
+        PrintWriter out = response.getWriter();
+
+        try 
+        {
+            if (this.annotatedControllerMethod.containsKey(urlEntree)) 
+            {
+                Mapping map = annotatedControllerMethod.get(urlEntree);
+                Class<?> kilasy = Class.forName(map.getClassName());
+                Method meth = null;
+
+                // Recherche de la méthode avec le bon nom
+                for (Method method : kilasy.getMethods()) 
+                {
+                    if (method.getName().equals(map.getMethodName())) 
+                    {
+                        meth = method;
+                        break;
+                    }
+                }
+
+                if (meth == null) 
+                {
+                    throw new NoSuchMethodException("Méthode " + map.getMethodName() + " non trouvée dans " + kilasy.getName());
+                }
+
+                Class<?> returnType = meth.getReturnType();
+                Object instance = kilasy.getDeclaredConstructor().newInstance();
+                Parameter[] paramTab = meth.getParameters();
+                
+                out.println("NOMBRE de paramètre de la méthode: " + paramTab.length + " \n");
+                Object[] arguments = new Object[paramTab.length];
+
+                Map<String, String[]> parameterMap = request.getParameterMap();
+
+                for (int i = 0; i < paramTab.length; i++) 
+                {
+                    Class<?> paramClass = paramTab[i].getType();
+                    
+                    if(paramClass.equals(MySession.class))
+                    {
+                        arguments[i]= new MySession(request.getSession());
+                    }
+                    else if (!Utils.isPrimitive(paramClass) && !paramClass.equals(MySession.class)) 
+                    {
+                        String indiceObj = null;
+                        if (paramTab[i].isAnnotationPresent(Argument.class)) 
+                        {
+                            out.print("Objet avec annotation name: " + paramTab[i].getName() + "\n");
+
+                            indiceObj = paramTab[i].getAnnotation(Argument.class).name();
+                            
+                        }
+                        else
+                        {
+                            request.setAttribute("errorMessage", "ETU002455 :tous les argument doivent être annotée");
+                            
+                            RequestDispatcher dispat = request.getRequestDispatcher("/emp/error.jsp");
+                            dispat.forward(request, response);
+
+                        }
+
+                            Map<String, Object> objectParams = new HashMap<>();
+
+                            for (String paramName : parameterMap.keySet()) 
+                            {
+                                if (paramName.startsWith(indiceObj + ".")) 
+                                {
+                                    String[] fieldParts = paramName.split("\\.");
+                                    if (fieldParts.length == 2) 
+                                    {
+                                        String fieldName = fieldParts[1];
+                                        String fieldValue = request.getParameter(paramName);
+                                        out.println("Nom du champ: " + paramName + ", Valeur du champ: " + fieldValue + "\n");
+
+                                        objectParams.put(fieldName, Utils.convertParameter(fieldValue, paramClass.getDeclaredField(fieldName).getType()));
+                                    }
+                                }
+                            }
+                            String sessionFieldName = Utils.getFieldNameOfType(paramClass,"MySession");
+                            if(sessionFieldName!=null)
+                            {
+                                MySession session = new MySession(request.getSession());
+                                objectParams.put(sessionFieldName, session);
+
+                            }
+                            for (Map.Entry<String, Object> entry : objectParams.entrySet()) 
+                            {
+                                String key = entry.getKey();
+                                Object value = entry.getValue();
+                                String className = value.getClass().getName();
+                                System.out.println("Attribut de classe utilisateur : " + key + ", Class: " + className);
+                            }
+                            arguments[i] = Utils.createInstance(paramClass, objectParams);
+                            
+                    } 
+                    else 
+                    {
+                        String paramValue = null;
+
+                        if (paramTab[i].isAnnotationPresent(Argument.class)) 
+                        {
+
+                            String nomParamAnnotated = paramTab[i].getAnnotation(Argument.class).name();
+                            paramValue = request.getParameter(nomParamAnnotated);
+                        } 
+                        else 
+                        {
+                            request.setAttribute("errorMessage", "ETU002455 :tous les argument doivent être annotée");
+                            
+                            RequestDispatcher dispat = request.getRequestDispatcher("/emp/error.jsp");
+                            dispat.forward(request, response);
+
+                        }
+                        arguments[i] = Utils.convertParameter(paramValue, paramTab[i].getType());
+                    }
+                }
+
+                if (returnType.equals(String.class)) 
+                {
+                    String rep = (String) meth.invoke(instance, arguments);
+                    out.println(rep);
+                } 
+                else if (returnType.equals(ModelView.class)) 
+                {
+                    ModelView mv = (ModelView) meth.invoke(instance, arguments);
+
+                    for (Map.Entry<String, Object> entry : mv.getData().entrySet()) 
+                    {
+                        request.setAttribute(entry.getKey(), entry.getValue());
+                    }
+                    RequestDispatcher dispat = request.getRequestDispatcher(mv.getUrl());
+                    dispat.forward(request, response);
+                } 
+                else 
+                {
+                    String errorString = "Type de retour de la fonction pas encore pris en charge";
+                    out.println(errorString);
+                    throw new ServletException(errorString);
+                }
+            } 
+            else 
+            {
+                String error = "l'url entrée ne mène nulle part: " + urlEntree;
+                out.println(error);
+                log(error);
+
+                throw new ServletException(error);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally
+        {
+            
+        }
+    }
+
+    
+
+
+
+
+    
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+}
+
+as you can see, in the processRequest, if we call a method that has a MySession Object in its parameter list, then we create a MySession using the request.getSession(). 
+Here is an example:
+ @Get(url="/user/checkLogin")
+    public ModelView goToList(@Argument(name="username") String username, @Argument(name="password") String password, @Argument(name="mySession") MySession mySession ) 
+    {
+
+        User user = (User) mySession.get("user");
+
+        if(user == null)
+        {
+            if ("john".equals(username)) {
+                user = User.getJohn();
+            } else if ("jane".equals(username)) {
+                user = User.getJane();
+            }
+    
+            
+            if (user != null && user.isValidUser(username, password)) 
+            {
+    
+                // Stocker l'utilisateur dans la session
+                mySession.add("user", user);
+    
+                // Créer le ModelView pour rediriger vers la page de liste des notes
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("session", mySession);
+    
+                String url = "/user/listeGrades.jsp";
+                ModelView mv = new ModelView(url, data);
+                return mv;
+            } 
+            else 
+            {
+                // Rediriger vers la page de login avec un message d'erreur
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("error", "Invalid credentials");
+                String url = "/user/login.jsp";
+                return new ModelView(url, data);
+            }
+        }
+        else 
+        {
+            HashMap<String, Object> data = new HashMap<>();
+                data.put("session", mySession);
+    
+                String url = "/user/listeGrades.jsp";
+                ModelView mv = new ModelView(url, data);
+                return mv;
+        }
+        
+       
+    }
+
+here is how I access the session in the modelView's data from the page listeGrades:
+MySession nySession = (MySession)request.getAttribute("session");
+    User user = (User) nySession.get("user");
+    HashMap<String, Integer> grades = User.getGrades(nySession);
+
+here's my problem. If I login, and get to the page, everything is fine. Normally, an httpSession of the user who just logged in should be saved somewhere. Then if I open another window and enter the page listeGrades, the informations of the logged in user in the session should appear. But in this case, no content appears. 
+Did I miss anything? Tell me what I should edit to make sure that the user is in a session and to access that session when entering the page
