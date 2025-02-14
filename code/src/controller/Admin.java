@@ -11,10 +11,10 @@ import utils.ModelView;
 
 
 @Controller
-public class Utilisateur {
+public class Admin {
 
     private int id;
-    private String mail;
+    private String username;
     private String mdp;
 
     MySession mySession;
@@ -36,12 +36,12 @@ public class Utilisateur {
         this.id = id;
     }
 
-    public String getMail() {
-        return mail;
+    public String getusername() {
+        return username;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setusername(String username) {
+        this.username = username;
     }
 
     public String getMdp() {
@@ -52,11 +52,11 @@ public class Utilisateur {
         this.mdp = mdp;
     }
 
-    // Méthode pour créer un utilisateur (INSERT)
+    // Méthode pour créer un Admin (INSERT)
     public void insert(Connection conn) throws SQLException {
-        String query = "INSERT INTO Utilisateur (mail, mdp) VALUES (?, ?)";
+        String query = "INSERT INTO Admin (username, mdp) VALUES (?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, this.mail);
+            stmt.setString(1, this.username);
             stmt.setString(2, this.mdp);
             stmt.executeUpdate();
 
@@ -69,16 +69,16 @@ public class Utilisateur {
         }
     }
 
-    // Méthode pour récupérer un utilisateur par ID (SELECT)
-    public static Utilisateur getById(Connection conn, int id) throws SQLException {
-        String query = "SELECT * FROM Utilisateur WHERE id = ?";
+    // Méthode pour récupérer un Admin par ID (SELECT)
+    public static Admin getById(Connection conn, int id) throws SQLException {
+        String query = "SELECT * FROM Admin WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Utilisateur user = new Utilisateur();
+                    Admin user = new Admin();
                     user.setId(rs.getInt("id"));
-                    user.setMail(rs.getString("mail"));
+                    user.setusername(rs.getString("username"));
                     user.setMdp(rs.getString("mdp"));
                     return user;
                 }
@@ -87,16 +87,16 @@ public class Utilisateur {
         return null;
     }
 
-    // Méthode pour récupérer tous les utilisateurs (SELECT ALL)
-    public static List<Utilisateur> getAll(Connection conn) throws SQLException {
-        List<Utilisateur> users = new ArrayList<>();
-        String query = "SELECT * FROM Utilisateur";
+    // Méthode pour récupérer tous les Admins (SELECT ALL)
+    public static List<Admin> getAll(Connection conn) throws SQLException {
+        List<Admin> users = new ArrayList<>();
+        String query = "SELECT * FROM Admin";
         try (PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                Utilisateur user = new Utilisateur();
+                Admin user = new Admin();
                 user.setId(rs.getInt("id"));
-                user.setMail(rs.getString("mail"));
+                user.setusername(rs.getString("username"));
                 user.setMdp(rs.getString("mdp"));
                 users.add(user);
             }
@@ -104,20 +104,20 @@ public class Utilisateur {
         return users;
     }
 
-    // Méthode pour mettre à jour un utilisateur (UPDATE)
+    // Méthode pour mettre à jour un Admin (UPDATE)
     public void update(Connection conn) throws SQLException {
-        String query = "UPDATE Utilisateur SET mail = ?, mdp = ? WHERE id = ?";
+        String query = "UPDATE Admin SET username = ?, mdp = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, this.mail);
+            stmt.setString(1, this.username);
             stmt.setString(2, this.mdp);
             stmt.setInt(3, this.id);
             stmt.executeUpdate();
         }
     }
 
-    // Méthode pour supprimer un utilisateur (DELETE)
+    // Méthode pour supprimer un Admin (DELETE)
     public void delete(Connection conn) throws SQLException {
-        String query = "DELETE FROM Utilisateur WHERE id = ?";
+        String query = "DELETE FROM Admin WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, this.id);
             stmt.executeUpdate();
@@ -131,18 +131,18 @@ public class Utilisateur {
 
     // METHODES
     // LOGIN
-    public static boolean checkLogin(Connection connection, String mail, String mdp) {
-        String sql = "SELECT id, mail, mdp FROM Utilisateur WHERE mail = ? AND mdp = ?";
+    public static boolean checkLogin(Connection connection, String username, String mdp) {
+        String sql = "SELECT id, username, mdp FROM Admin WHERE username = ? AND mdp = ?";
         
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             // Remplacer les paramètres de la requête
-            stmt.setString(1, mail);
+            stmt.setString(1, username);
             stmt.setString(2, mdp);
             
             // Exécuter la requête
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    // Si un utilisateur est trouvé avec le bon mail et mot de passe
+                    // Si un Admin est trouvé avec le bon username et mot de passe
                     return true;  // Connexion réussie
                 }
             }
@@ -150,30 +150,29 @@ public class Utilisateur {
             e.printStackTrace();  // En cas d'erreur dans la requête ou la connexion
         }
         
-        // Si aucun utilisateur correspondant n'est trouvé
+        // Si aucun Admin correspondant n'est trouvé
         return false;  // Connexion échouée
     }
 
 
-    @Url(url="/utilisateur/login")
+    @Url(url="/admin/login")
     public ModelView login() {
         HashMap<String,Object> map = new HashMap<>();
-        String url = "/utilisateur/login.jsp";
+        String url = "/admin/login.jsp";
         ModelView mv = new ModelView(url,map);
         return mv;
     }
 
     @Post()
-    @Url(url="/utilisateur/checkLogin")
-    public ModelView goToDashBoard(@Argument(name="utilisateur") Utilisateur utilisateur, Connection conn ) 
+    @Url(url="/admin/checkLogin")
+    public ModelView goToDashBoard(@Argument(name="Admin") Admin Admin, Connection conn ) 
     {
-          if(checkLogin(conn, utilisateur.getMail(), utilisateur.getMdp())){
-            utilisateur.getMySession().add("utilisateur", utilisateur);
+          if(checkLogin(conn, Admin.getusername(), Admin.getMdp())){
+            Admin.getMySession().add("Admin", Admin);
 
             HashMap<String, Object> data = new HashMap<>();
-            data.put("session", utilisateur.getMySession());
 
-            String url = "/frontOffice/dashboard.jsp";
+            String url = "/backOffice/dashboard.jsp";
             ModelView mv = new ModelView(url, data);
             return mv;
           }
@@ -182,7 +181,7 @@ public class Utilisateur {
               // Rediriger vers la page de login avec un message d'erreur
               HashMap<String, Object> data = new HashMap<>();
               data.put("error", "Invalid credentials");
-              String url = "/utilisateur/login.jsp";
+              String url = "/admin/login.jsp";
               return new ModelView(url, data);
           }
     }

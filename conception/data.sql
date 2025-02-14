@@ -1,1 +1,1 @@
-insert into Utilisateur(mail,mdp) values ('fifaliana@gmail.com','aaa');
+insert into Admin(username,mdp) values ('admin','admin');

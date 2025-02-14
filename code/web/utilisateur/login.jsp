@@ -6,9 +6,9 @@
 </head>
 <body>
     <h1>Login</h1>
-    <form action="/ticketing/utilisateur/checkLogin" method="post">
-        Email: <input type="text" name="utilisateur.mail" required value="fifaliana@gmail.com"><br>
-        Password: <input type="password" name="utilisateur.mdp" required value="aaa"><br>
+    <form action="/ticketing/admin/checkLogin" method="post">
+        Email: <input type="text" name="utilisateur.username" required value="admin"><br>
+        Password: <input type="password" name="utilisateur.mdp" required value="admin"><br>
         <input type="submit" value="Login">
     </form>
     
