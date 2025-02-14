@@ -34,11 +34,39 @@
         Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur"); // ✅ Bon type
 
         if(utilisateur!=null){
-            System.out.println("HELL YEAH");%>
-       <h1><%= utilisateur.getMail() %></h1>
+            System.out.println("HELL YEAH");
+       
 
-            
-        <% } else {
+            HashMap<String, Integer> grades = utilisateur.getGrades();
+
+            if (grades != null) {
+        %>
+                <p>Welcome, <%= utilisateur.getUsername() %>!</p>
+                
+                <table>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Grade</th>
+                    </tr>
+                    <tr>
+                        <td>Math</td>
+                        <td><%= grades.get("Math") %></td>
+                    </tr>
+                    <tr>
+                        <td>Physics</td>
+                        <td><%= grades.get("Physics") %></td>
+                    </tr>
+                    <tr>
+                        <td>Chemistry</td>
+                        <td><%= grades.get("Chemistry") %></td>
+                    </tr>
+                    <%-- Ajoutez d'autres matières si nécessaire --%>
+                </table>
+    <% 
+            } else {
+                out.println("<p>Error: Grades data is missing.</p>");
+            }
+        } else {
             out.println("<p>Error: Session data is missing.</p>");
         }
     %>
