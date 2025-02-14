@@ -1,30 +1,22 @@
 package controller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.HashMap;
-import annotations.Argument;
-import annotations.Controller;
-import annotations.Post;
-import annotations.Url;
-import myconnection.MyConnection;
+
+import annotations.*;
 import session.MySession;
 import utils.ModelView;
-
-import java.sql.Statement;
 
 
 @Controller
 public class Utilisateur {
-  
-    int id;
-    String mail;
-    String mdp;
+
+    private int id;
+    private String mail;
+    private String mdp;
+
     MySession mySession;
 
     public MySession getMySession() {
@@ -173,50 +165,27 @@ public class Utilisateur {
 
     @Post()
     @Url(url="/utilisateur/checkLogin")
-    public ModelView goToDashBoard(@Argument(name="utilisateur") Utilisateur utilisateur) 
+    public ModelView goToDashBoard(@Argument(name="utilisateur") Utilisateur utilisateur, Connection conn ) 
     {
-        try(Connection conn = MyConnection.getConnection()){
-            if(checkLogin(conn, utilisateur.getMail(), utilisateur.getMdp())){
-                utilisateur.getMySession().add("utilisateur", utilisateur);
-    
-                HashMap<String, Object> data = new HashMap<>();
-                // data.put("session", utilisateur.getMySession());
-    
-                String url = "/frontOffice/dashboard.jsp";
-                ModelView mv = new ModelView(url, data);
-                return mv;
-              }
-             
-            // Rediriger vers la page de login avec un message d'erreur
+          if(checkLogin(conn, utilisateur.getMail(), utilisateur.getMdp())){
+            utilisateur.getMySession().add("utilisateur", utilisateur);
+
             HashMap<String, Object> data = new HashMap<>();
-            data.put("error", "Invalid credentials");
-            String url = "/utilisateur/login.jsp";
-            return new ModelView(url, data);
-              
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            // En cas d'erreur, rediriger vers une page d'erreur ou de login
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("error", "Une erreur est survenue.");
-            return new ModelView("/utilisateur/login.jsp", data);
-        }
-          
+            data.put("session", utilisateur.getMySession());
+
+            String url = "/frontOffice/dashboard.jsp";
+            ModelView mv = new ModelView(url, data);
+            return mv;
+          }
+          else 
+          {
+              // Rediriger vers la page de login avec un message d'erreur
+              HashMap<String, Object> data = new HashMap<>();
+              data.put("error", "Invalid credentials");
+              String url = "/utilisateur/login.jsp";
+              return new ModelView(url, data);
+          }
     }
 
-    
-   
-
-    
-    @Url(url="/utilisateur/mainaBe")
-    public ModelView getListeGrades()
-    {
-        HashMap<String, Object> data = new HashMap<>();
-        String url = "/utilisateur/listeGrades.jsp";
-        return new ModelView(url, data);
-    }
-    
 
 }
-
-    
