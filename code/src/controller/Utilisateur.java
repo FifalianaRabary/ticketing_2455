@@ -1,159 +1,103 @@
 package controller;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import annotations.*;
+import java.util.HashMap;
+import annotations.Argument;
+import annotations.Controller;
+import annotations.Post;
+import annotations.Url;
 import session.MySession;
 import utils.ModelView;
 
-
 @Controller
 public class Utilisateur {
+     String username;
+     String password;
+     MySession mySession;
 
-    private int id;
-    private String mail;
-    private String mdp;
+     static HashMap<String, HashMap<String, Integer>> userGrades = new HashMap<>();
 
-    MySession mySession;
+    static {
+        // Initialisation des notes des utilisateurs
+        HashMap<String, Integer> gradesJohn = new HashMap<>();
+        gradesJohn.put("Math", 85);
+        gradesJohn.put("Physics", 90);
+        gradesJohn.put("Chemistry", 78);
+
+        HashMap<String, Integer> gradesJane = new HashMap<>();
+        gradesJane.put("Math", 92);
+        gradesJane.put("Physics", 88);
+        gradesJane.put("Chemistry", 95);
+
+        userGrades.put("john", gradesJohn);
+        userGrades.put("jane", gradesJane);
+    }
+
+    public Utilisateur() {
+        // Constructeur par défaut
+    }
+
+    public Utilisateur(String username, String password, MySession session) {
+        this.username = username;
+        this.password = password;
+        this.mySession = session;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 
     public MySession getMySession() {
         return mySession;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setMySession(MySession mySession) {
         this.mySession = mySession;
     }
 
-    // Getters et Setters
-    public int getId() {
-        return id;
+    public static HashMap<String, HashMap<String, Integer>> getUserGrades() {
+        return userGrades;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public static void setUserGrades(HashMap<String, HashMap<String, Integer>> userGrades) {
+        Utilisateur.userGrades = userGrades;
     }
 
-    public String getMail() {
-        return mail;
+    public static HashMap<String, Integer> getGrades(String username) {
+        return userGrades.get(username);
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public static Utilisateur getJohn(MySession session) {
+        return new Utilisateur("john", "aaa",session);
     }
 
-    public String getMdp() {
-        return mdp;
+    public static Utilisateur getJane(MySession session) {
+        return new Utilisateur("jane", "password456",session);
     }
 
-    public void setMdp(String mdp) {
-        this.mdp = mdp;
+    public boolean isValidUtilisateur(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
     }
 
-    // Méthode pour créer un utilisateur (INSERT)
-    public void insert(Connection conn) throws SQLException {
-        String query = "INSERT INTO Utilisateur (mail, mdp) VALUES (?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, this.mail);
-            stmt.setString(2, this.mdp);
-            stmt.executeUpdate();
-
-            // Récupérer l'ID généré
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    this.id = rs.getInt(1);
-                }
-            }
-        }
-    }
-
-    // Méthode pour récupérer un utilisateur par ID (SELECT)
-    public static Utilisateur getById(Connection conn, int id) throws SQLException {
-        String query = "SELECT * FROM Utilisateur WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    Utilisateur user = new Utilisateur();
-                    user.setId(rs.getInt("id"));
-                    user.setMail(rs.getString("mail"));
-                    user.setMdp(rs.getString("mdp"));
-                    return user;
-                }
-            }
-        }
-        return null;
-    }
-
-    // Méthode pour récupérer tous les utilisateurs (SELECT ALL)
-    public static List<Utilisateur> getAll(Connection conn) throws SQLException {
-        List<Utilisateur> users = new ArrayList<>();
-        String query = "SELECT * FROM Utilisateur";
-        try (PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                Utilisateur user = new Utilisateur();
-                user.setId(rs.getInt("id"));
-                user.setMail(rs.getString("mail"));
-                user.setMdp(rs.getString("mdp"));
-                users.add(user);
-            }
-        }
-        return users;
-    }
-
-    // Méthode pour mettre à jour un utilisateur (UPDATE)
-    public void update(Connection conn) throws SQLException {
-        String query = "UPDATE Utilisateur SET mail = ?, mdp = ? WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, this.mail);
-            stmt.setString(2, this.mdp);
-            stmt.setInt(3, this.id);
-            stmt.executeUpdate();
-        }
-    }
-
-    // Méthode pour supprimer un utilisateur (DELETE)
-    public void delete(Connection conn) throws SQLException {
-        String query = "DELETE FROM Utilisateur WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, this.id);
-            stmt.executeUpdate();
-        }
-    }
-
-
-
-
-
-
-    // METHODES
-    // LOGIN
-    public static boolean checkLogin(Connection connection, String mail, String mdp) {
-        String sql = "SELECT id, mail, mdp FROM Utilisateur WHERE mail = ? AND mdp = ?";
+    public  HashMap<String, Integer> getGrades() {
         
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            // Remplacer les paramètres de la requête
-            stmt.setString(1, mail);
-            stmt.setString(2, mdp);
-            
-            // Exécuter la requête
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    // Si un utilisateur est trouvé avec le bon mail et mot de passe
-                    return true;  // Connexion réussie
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();  // En cas d'erreur dans la requête ou la connexion
-        }
-        
-        // Si aucun utilisateur correspondant n'est trouvé
-        return false;  // Connexion échouée
+            return userGrades.get(this.getUsername());
+       
     }
 
+    
 
     @Url(url="/utilisateur/login")
     public ModelView login() {
@@ -163,29 +107,66 @@ public class Utilisateur {
         return mv;
     }
 
+
     @Post()
     @Url(url="/utilisateur/checkLogin")
-    public ModelView goToDashBoard(@Argument(name="utilisateur") Utilisateur utilisateur, Connection conn ) 
+    public ModelView goToList(@Argument(name="utilisateur") Utilisateur utilisateur ) 
     {
-          if(checkLogin(conn, utilisateur.getMail(), utilisateur.getMdp())){
-            utilisateur.getMySession().add("utilisateur", utilisateur);
-
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("session", utilisateur.getMySession());
-
-            String url = "/frontOffice/dashboard.jsp";
-            ModelView mv = new ModelView(url, data);
-            return mv;
-          }
-          else 
-          {
-              // Rediriger vers la page de login avec un message d'erreur
-              HashMap<String, Object> data = new HashMap<>();
-              data.put("error", "Invalid credentials");
-              String url = "/utilisateur/login.jsp";
-              return new ModelView(url, data);
-          }
+            if ("john".equals(utilisateur.getUsername())) 
+            {
+                utilisateur = Utilisateur.getJohn(utilisateur.getMySession());
+            } else if ("jane".equals(utilisateur.getUsername())) {
+                utilisateur = Utilisateur.getJane(utilisateur.getMySession());
+            }
+    
+            
+            if (utilisateur != null && utilisateur.isValidUtilisateur(utilisateur.getUsername(), utilisateur.getPassword())) 
+            {
+                System.out.println("UTILISATEUR EXISTE OH ");
+    
+                // Stocker l'utilisateur dans la session
+                utilisateur.getMySession().add("utilisateur", utilisateur);
+    
+                // Créer le ModelView pour rediriger vers la page de liste des notes
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("session", utilisateur.getMySession());
+    
+                String url = "/utilisateur/listeGrades.jsp";
+                ModelView mv = new ModelView(url, data);
+                return mv;
+            } 
+            else 
+            {
+                // Rediriger vers la page de login avec un message d'erreur
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("error", "Invalid credentials");
+                String url = "/utilisateur/login.jsp";
+                return new ModelView(url, data);
+            } 
     }
 
+    @Url(url="/utilisateur/logout")
+    public ModelView logout(@Argument(name="mySession") MySession mySession)
+    {
+        mySession.delete("utilisateur");
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("error", "Invalid credentials");
+        String url = "/utilisateur/login.jsp";
+        return new ModelView(url, data);
+    }
+
+   
+
+    
+    @Url(url="/utilisatteur/mainaBe")
+    public ModelView mainaBe()
+    {
+        HashMap<String, Object> data = new HashMap<>();
+        String url = "/utilisatteur/listeGrades.jsp";
+        return new ModelView(url, data);
+    }
+    
 
 }
+
+    

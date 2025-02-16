@@ -1,0 +1,60 @@
+/* Ajouter une image en arrière-plan et centrer le formulaire */
+body, html {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../img/grapes_wine.jpg');
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+}
+
+.container {
+    max-width: 400px;
+}
+
+.divLogin {
+    width: 100%;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.8); /* Fond blanc semi-transparent */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #343a40;
+    font-weight: 600;
+    font-family: 'GreatVibes-Regular';
+}
+
+.form-control {
+    margin-bottom: 15px;
+}
+
+
+
+.login {
+    background-color: #570505; /* Rouge du thème */
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    margin-top: 1.5%;
+    width: fit-content !important;
+     height: 30%;
+}
+
+
+
+.login:hover {
+    background-color: #8b0000 !important; /* Rouge moins foncé au survol */
+}
+
+/* S'il y a un focus sur le bouton, il ne doit pas changer de couleur */
+.login:focus {
+    outline: none; /* Supprime la bordure de focus */
+}

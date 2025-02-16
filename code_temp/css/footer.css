@@ -1,0 +1,35 @@
+
+
+/* Ajoutez ceci dans votre fichier CSS pour fixer le footer */
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #823d00; /* Rouge foncé, plus sombre que la navigation */
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+
+/* Liens dans le footer */
+footer a {
+    color: #ffffff;
+    font-size: 16px;
+    text-decoration: none;
+    /* margin: 0 10px; */
+    text-align: center;
+}
+
+footer a:hover {
+    color: #8b0000; /* Rouge clair au survol */
+}
+
+/* Copyright */
+footer .copyright {
+    font-size: 14px;
+    margin-top: 15px;
+    /* text-align: center; */
+    margin-left: 15%;
+
+}

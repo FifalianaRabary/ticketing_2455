@@ -4,19 +4,26 @@ CREATE TABLE Modele (
     designation VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Création de la table Avion
-CREATE TABLE Avion (
-    id SERIAL PRIMARY KEY,
-    id_modele INT REFERENCES Modele(id) ON DELETE CASCADE,
-    nb_siege_business INT CHECK (nb_siege_business >= 0),
-    nb_siege_eco INT CHECK (nb_siege_eco >= 0),
-    date_fabrication DATE NOT NULL
-);
-
 -- Création de la table Type_siege
 CREATE TABLE Type_siege (
     id SERIAL PRIMARY KEY,
     designation VARCHAR(50) NOT NULL UNIQUE
+);
+
+
+-- Création de la table Avion
+CREATE TABLE Avion (
+    id SERIAL PRIMARY KEY,
+    id_modele INT REFERENCES Modele(id) ON DELETE CASCADE,
+    date_fabrication DATE NOT NULL
+);
+
+CREATE TABLE Siege_avion(
+    id SERIAL PRIMARY KEY,
+    id_avion INT REFERENCES Avion(id) ON DELETE SET NULL,
+    id_type_siege INT REFERENCES Type_siege(id) ON DELETE SET NULL,
+    nb INT
+
 );
 
 -- Création de la table Ville
@@ -31,16 +38,22 @@ CREATE TABLE Vol (
     date_heure_depart TIMESTAMP NOT NULL,
     date_heure_arrivee TIMESTAMP NOT NULL CHECK (date_heure_arrivee > date_heure_depart),
     id_avion INT REFERENCES Avion(id) ON DELETE SET NULL,
-    id_ville INT REFERENCES Ville(id) ON DELETE CASCADE,
-    prix_business DECIMAL(10,2) CHECK (prix_business >= 0),
-    prix_eco DECIMAL(10,2) CHECK (prix_eco >= 0)
+    id_ville INT REFERENCES Ville(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Prix_siege_vol(
+    id SERIAL PRIMARY KEY,
+    id_avion INT REFERENCES Avion(id) ON DELETE SET NULL,
+    id_type_siege INT REFERENCES Type_siege(id) ON DELETE SET NULL,
+    prix DECIMAL(10,2) CHECK (prix >= 0)
+
 );
 
 -- Création de la table Promotion_siege
 CREATE TABLE Promotion_siege (
     id SERIAL PRIMARY KEY,
-    pourcent DECIMAL(5,2) CHECK (pourcent >= 0 AND pourcent <= 100),
     id_vol INT REFERENCES Vol(id) ON DELETE CASCADE,
+    pourcent DECIMAL(5,2) CHECK (pourcent >= 0 AND pourcent <= 100),
     id_type_siege INT REFERENCES Type_siege(id) ON DELETE CASCADE,
     nb_siege INT CHECK (nb_siege >= 0)
 );
@@ -59,17 +72,17 @@ CREATE TABLE Regle_annulation_reservation (
     nb_heure_limite_avant_vol INT CHECK (nb_heure_limite_avant_vol >= 0)
 );
 
--- Création de la table Utilisateur
-CREATE TABLE Utilisateur (
+-- Création de la table Admin
+CREATE TABLE Admin (
     id SERIAL PRIMARY KEY,
-    mail VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(255) NOT NULL UNIQUE,
     mdp TEXT NOT NULL
 );
 
 -- Création de la table Reservation
 CREATE TABLE Reservation (
     id SERIAL PRIMARY KEY,
-    id_user INT REFERENCES Utilisateur(id) ON DELETE CASCADE,
+    identifiant_passager VARCHAR(255) NOT NULL UNIQUE,
     date_heure_reservation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_vol INT REFERENCES Vol(id) ON DELETE CASCADE,
     id_type_siege INT REFERENCES Type_siege(id) ON DELETE CASCADE,

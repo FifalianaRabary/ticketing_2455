@@ -1,12 +1,12 @@
 @echo off
-set "repertoire=C:\S5\TICKETING\code"
+set "repertoire=C:\S5\GitHub\ticketing_2455\code"
 set "src=%repertoire%\src"
 set "lib=%repertoire%\lib"
 set "web=%repertoire%\web"
 set "xml=%repertoire%\web.xml"
 set "nomAppli=ticketing"
 set "webapps=C:\Program Files\Apache Software Foundation\Tomcat 10.1\webapps"
-set "temp=C:\S5\TICKETING\code_temp"
+set "temp=C:\S5\GitHub\ticketing_2455\code_temp"
 set "bin=%repertoire%\bin"
 
 rmdir /s /q "%temp%"

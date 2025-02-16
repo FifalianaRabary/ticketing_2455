@@ -1,0 +1,79 @@
+/* Styles pour le header */
+.header-bar {
+    width: 100%;
+    background-image: url('../img/image.png'); /* Chemin relatif vers l'image */
+    background-size: cover; /* Ajuste l'image pour couvrir toute la barre */
+    background-repeat: no-repeat; /* Empêche la répétition de l'image */
+    background-position: center; /* Centre l'image */
+    padding: 15px 0;
+}
+
+.header-bar {
+    color: #ffffff;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0;
+    font-family: 'Georgia', serif;
+}
+
+.slogan {
+    color: #9f3c00;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left: 18%;
+    font-family: 'Georgia', serif;
+    text-align: left; /* Assurez-vous que le texte soit aligné à gauche */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Ombre discrète */
+}
+
+
+.notification-bell {
+    margin-right: 5%;
+    position: relative; /* Nécessaire pour positionner le badge */
+}
+
+.notification-bell i {
+    cursor: pointer; /* Rendre l'icône cliquable */
+    width: 65%;
+    transition: transform 0.3s ease, color 0.3s ease; /* Transition pour effet hover */
+}
+
+.notification-bell i:hover {
+    transform: scale(1.2); /* Agrandir l'icône lors du survol */
+    color: #ffcc00; /* Changer la couleur de l'icône au survol */
+}
+
+/* Positionnement et style du badge */
+.notification-bell .badge {
+    font-size: 0.8rem; /* Taille du badge */
+    padding: 0.2rem 0.5rem; /* Padding du badge */
+    background-color: #dc3545; /* Couleur du badge par défaut */
+    transition: background-color 0.3s ease; /* Transition pour l'arrière-plan du badge */
+    position: absolute; /* Positionner absolument par rapport à .notification-bell */
+    top: -5px; /* Décaler légèrement vers le haut */
+    right: -5px; /* Décaler légèrement vers la droite */
+    border-radius: 50%; /* Donner une forme ronde au badge */
+}
+
+.notification-bell i:hover + .badge {
+    background-color: #ffcc00; /* Changer la couleur du badge au survol */
+}
+
+/* Assurez-vous que les éléments sont espacés et alignés correctement */
+.contenu-header {
+    display: flex;
+    justify-content: space-between; /* Espacer le slogan et la cloche */
+    align-items: center; /* Aligner les éléments verticalement */
+    width: 100%; /* Assurez-vous qu'il occupe toute la largeur */
+}
+
+/* Média queries pour responsive */
+@media (max-width: 992px) {
+    .slogan {
+        margin-left: 30%;
+    }
+
+    .notification-bell {
+        margin-right: 5%;
+    }
+}
