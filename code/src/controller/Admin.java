@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import annotations.*;
+import myconnection.MyConnection;
 import session.MySession;
 import utils.ModelView;
 
@@ -36,11 +37,11 @@ public class Admin {
         this.id = id;
     }
 
-    public String getusername() {
+    public String getUsername() {
         return username;
     }
 
-    public void setusername(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -78,7 +79,7 @@ public class Admin {
                 if (rs.next()) {
                     Admin user = new Admin();
                     user.setId(rs.getInt("id"));
-                    user.setusername(rs.getString("username"));
+                    user.setUsername(rs.getString("username"));
                     user.setMdp(rs.getString("mdp"));
                     return user;
                 }
@@ -96,7 +97,7 @@ public class Admin {
             while (rs.next()) {
                 Admin user = new Admin();
                 user.setId(rs.getInt("id"));
-                user.setusername(rs.getString("username"));
+                user.setUsername(rs.getString("username"));
                 user.setMdp(rs.getString("mdp"));
                 users.add(user);
             }
@@ -132,6 +133,7 @@ public class Admin {
     // METHODES
     // LOGIN
     public static boolean checkLogin(Connection connection, String username, String mdp) {
+        System.out.println("FONCTION CHECK LOGIN");
         String sql = "SELECT id, username, mdp FROM Admin WHERE username = ? AND mdp = ?";
         
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -165,26 +167,43 @@ public class Admin {
 
     @Post()
     @Url(url="/admin/checkLogin")
-    public ModelView goToDashBoard(@Argument(name="Admin") Admin Admin, Connection conn ) 
+    public ModelView goToDashBoard(@Argument(name="admin") Admin admin ) 
     {
-          if(checkLogin(conn, Admin.getusername(), Admin.getMdp())){
-            Admin.getMySession().add("Admin", Admin);
 
-            HashMap<String, Object> data = new HashMap<>();
+        System.out.println(admin.getUsername()); 
+        System.out.println(admin.getMdp()); 
+        try(Connection conn = MyConnection.getConnection()) {
+            if(checkLogin(conn, admin.getUsername(), admin.getMdp())){
 
-            String url = "/backOffice/dashboard.jsp";
-            ModelView mv = new ModelView(url, data);
-            return mv;
-          }
-          else 
-          {
-              // Rediriger vers la page de login avec un message d'erreur
-              HashMap<String, Object> data = new HashMap<>();
-              data.put("error", "Invalid credentials");
-              String url = "/admin/login.jsp";
-              return new ModelView(url, data);
-          }
+                System.out.println("IF");
+    
+                HashMap<String, Object> data = new HashMap<>();
+    
+                String url = "/backOffice/dashboard.jsp";
+                ModelView mv = new ModelView(url, data);
+                return mv;
+              }
+              else 
+              {
+                System.out.println("ELSE");
+                  // Rediriger vers la page de login avec un message d'erreur
+                  HashMap<String, Object> data = new HashMap<>();
+                  data.put("error", "Invalid credentials");
+                  String url = "/admin/login.jsp";
+                  return new ModelView(url, data);
+              }
+        } catch (Exception e) {
+            e.printStackTrace();
+             // Rediriger vers la page de login avec un message d'erreur
+             HashMap<String, Object> data = new HashMap<>();
+             data.put("error", "Invalid credentials");
+             String url = "/admin/login.jsp";
+             return new ModelView(url, data);
+        }
+          
     }
+
+    
 
 
 }
