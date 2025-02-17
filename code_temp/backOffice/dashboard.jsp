@@ -15,7 +15,7 @@
 
     <div class="new-container">
 
-        <%@ include file="templates/footer.jsp" %>
+        <a href="/ticketing/vol/formVol">Inserer un vol </a>
     
         <%
             Admin admin = (Admin) session.getAttribute("admin"); // ✅ Bon type

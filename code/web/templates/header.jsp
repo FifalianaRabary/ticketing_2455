@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site de Gestion de Viticulture</title>
     <!-- Bootstrap CSS -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/header.css" rel="stylesheet">
-    <link href="css/navigation.css" rel="stylesheet">
-    <link href="css/footer.css" rel="stylesheet">
-    <link href="css/contenu.css" rel="stylesheet">
-    <link href="css/calendrier.css" rel="stylesheet">
+    <link href="C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/ticketing/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/ticketing/css/header.css" rel="stylesheet">
+    <link href="C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/ticketing/css/navigation.css" rel="stylesheet">
+    <link href="C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/ticketing/css/footer.css" rel="stylesheet">
+    <link href="C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/ticketing/css/contenu.css" rel="stylesheet">
+    <link href="C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/ticketing/css/calendrier.css" rel="stylesheet">
     <!-- Font Awesome for Bell Icon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="assets/css/fullcalendar.min.css" rel="stylesheet">
+    <link href="C:/Program Files/Apache Software Foundation/Tomcat 10.1/webapps/ticketing/assets/css/fullcalendar.min.css" rel="stylesheet">
 
     <style>
         /* Liste déroulante des notifications */
