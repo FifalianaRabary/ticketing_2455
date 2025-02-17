@@ -14,6 +14,7 @@ CREATE TABLE Type_siege (
 -- Création de la table Avion
 CREATE TABLE Avion (
     id SERIAL PRIMARY KEY,
+    designation VARCHAR(50) NOT NULL UNIQUE,
     id_modele INT REFERENCES Modele(id) ON DELETE CASCADE,
     date_fabrication DATE NOT NULL
 );
@@ -35,15 +36,17 @@ CREATE TABLE Ville (
 -- Création de la table Vol
 CREATE TABLE Vol (
     id SERIAL PRIMARY KEY,
+    designation VARCHAR(50) NOT NULL UNIQUE,
     date_heure_depart TIMESTAMP NOT NULL,
     date_heure_arrivee TIMESTAMP NOT NULL CHECK (date_heure_arrivee > date_heure_depart),
     id_avion INT REFERENCES Avion(id) ON DELETE SET NULL,
-    id_ville INT REFERENCES Ville(id) ON DELETE CASCADE
+    id_ville_depart INT REFERENCES Ville(id) ON DELETE CASCADE,
+    id_ville_arrivee INT REFERENCES Ville(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Prix_siege_vol(
     id SERIAL PRIMARY KEY,
-    id_avion INT REFERENCES Avion(id) ON DELETE SET NULL,
+    id_vol INT REFERENCES Vol(id) ON DELETE SET NULL,
     id_type_siege INT REFERENCES Type_siege(id) ON DELETE SET NULL,
     prix DECIMAL(10,2) CHECK (prix >= 0)
 

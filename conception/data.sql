@@ -13,10 +13,10 @@ INSERT INTO Type_siege (designation) VALUES
 ('Business');
 
 -- Insertion des avions avec des modèles associés
-INSERT INTO Avion (id_modele, date_fabrication) VALUES 
-(1, '2015-06-10'),
-(2, '2018-03-15'),
-(3, '2020-07-22');
+INSERT INTO Avion (designation,id_modele, date_fabrication) VALUES 
+('avion1',1, '2015-06-10'),
+('avion2',2, '2018-03-15'),
+('avion3',3, '2020-07-22');
 
 -- Insertion des sièges pour chaque avion (nombre aléatoire)
 -- Boeing 737
