@@ -176,11 +176,11 @@ public class Vol {
 
     
 
-    public static double getPrixSiege(Connection conn, int idTypeSiege, int idVol) throws SQLException {
-        String query = "SELECT p.prix FROM Prix_siege_vol p JOIN Vol v ON p.id_avion = v.id_avion WHERE p.id_type_siege = ? AND v.id = ?";
+    public  double getPrixSiege(Connection conn, int idTypeSiege) throws SQLException {
+        String query = "SELECT p.prix FROM Prix_siege_vol p WHERE p.id_type_siege = ? AND v.id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, idTypeSiege);
-            stmt.setInt(2, idVol);
+            stmt.setInt(2, this.id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return rs.getDouble("prix");
@@ -201,8 +201,7 @@ public class Vol {
     }
     
 
-    @Post()
-    @Get()
+
     @Url(url="/vol/formVol")
     public ModelView goToFormVol() {
 
@@ -216,6 +215,31 @@ public class Vol {
             map.put("avions", avions);
 
             String url = "/backOffice/formulaireVol.jsp";
+            ModelView mv = new ModelView(url,map);
+        return mv;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+
+  
+    @Url(url="/vol/listVol")
+    public ModelView goToListVol() {
+
+        try (Connection conn = MyConnection.getConnection()) {
+            HashMap<String,Object> map = new HashMap<>();
+            
+
+            List<Vol> vols = Vol.getAll(conn);
+            
+            map.put("vols",vols);
+            map.put("connection",conn);
+
+
+            String url = "/backOffice/listeVol.jsp";
             ModelView mv = new ModelView(url,map);
         return mv;
             
@@ -287,67 +311,6 @@ public class Vol {
             }
         }
     }
-    // @Post()
-    // @Url(url="/vol/insert")
-    // public String insertVol(@Argument(name="vol") Vol vol, @Argument(name="prixEconomique") double prixEconomique, @Argument(name="prixBusiness") double prixBusiness) {
-    
-    //     vol.printVol();
-    //     System.out.println("prix eco : " + prixEconomique);
-    //     System.out.println("prix business : " + prixBusiness);
-    
-    //     Connection conn = null;
-    //     try {
-    //         conn = MyConnection.getConnection();
-    //         conn.setAutoCommit(false); // Désactiver l'auto-commit
-    
-    //         if (vol != null && prixEconomique > 0 && prixBusiness > 0) {
-    //             System.out.println("IF");
-    
-    //             int idVol = vol.insertReturningId(conn);
-    
-    //             // Insertion des prix pour les sièges en économique et business
-    //             int id_type_eco = 1;
-    //             int id_type_business = 2;
-    //             insertPrixSiege(conn, idVol, id_type_eco, prixEconomique);
-    //             insertPrixSiege(conn, idVol, id_type_business, prixBusiness);
-    
-    //             conn.commit(); // Valider la transaction
-    
-    //             // HashMap<String, Object> data = new HashMap<>();
-    //             // String url = "/vol/formVol";
-    //             return "vol inseré avec succes";
-    //         } else {
-    //             System.out.println("ELSE");
-    //             // HashMap<String, Object> data = new HashMap<>();
-    //             // data.put("error", "Invalid credentials");
-    //             // String url = "/backOffice/dashboard";
-    //             return "vol pas inséré";
-    //         }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         if (conn != null) {
-    //             try {
-    //                 conn.rollback(); // Annuler la transaction en cas d'erreur
-    //             } catch (SQLException rollbackEx) {
-    //                 rollbackEx.printStackTrace();
-    //             }
-    //         }
-    //         // HashMap<String, Object> data = new HashMap<>();
-    //         // data.put("error", "Une erreur s'est produite.");
-    //         // String url = "/vol/formVol";
-    //         // return new ModelView(url, data);
-    //         return "vol pas inséré";
-
-    //     } finally {
-    //         if (conn != null) {
-    //             try {
-    //                 conn.setAutoCommit(true); // Rétablir l'auto-commit
-    //                 conn.close(); // Fermer la connexion
-    //             } catch (SQLException closeEx) {
-    //                 closeEx.printStackTrace();
-    //             }
-    //         }
-    //     }
-    // }
+  
     
 }

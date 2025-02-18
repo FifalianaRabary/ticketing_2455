@@ -4,11 +4,9 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 
-<%@ include file="/templates/header.jsp" %>
 
 <div class="d-flex">
 
-    <%@ include file="/templates/navigation.jsp" %>
 
     <main class="content p-4 ms-3 me-3 content-scrollable">
 
@@ -16,6 +14,7 @@
     <div class="new-container">
 
         <a href="/ticketing/vol/formVol">Inserer un vol </a>
+        <a href="/ticketing/vol/listVol">Liste des vols </a>
     
         <%
             Admin admin = (Admin) session.getAttribute("admin"); // ✅ Bon type
@@ -39,6 +38,5 @@
     </main>
 </div>
 
-<%@ include file="/templates/footer.jsp" %>
 
 

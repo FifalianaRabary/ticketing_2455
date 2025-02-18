@@ -32,6 +32,7 @@ copy  /y "%xml%" "%temp%\WEB-INF"
 @REM compiler les controller avec lib et bin
 javac -parameters -cp "%lib%\*;%bin%" -d "%bin%" "%src%\myconnection\*.java"
 javac -parameters -cp "%lib%\*;%bin%" -d "%bin%" "%src%\controller\*.java"
+javac -parameters -cp "%lib%\*;%bin%" -d "%bin%" "%src%\test\*.java"
 
 @REM copier ce qu'il y a dans bin dans classes
 xcopy /s /y "%bin%" "%temp%\WEB-INF\classes"

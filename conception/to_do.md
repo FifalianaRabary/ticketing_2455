@@ -1,8 +1,8 @@
 # BACKOFFICE
-- [] login 
+- [X] login 
 
 - [] CRUD Vol:
-    - [] insertion (avec prix siege par classe)
+    - [X] insertion (avec prix siege par classe)
     - [] liste 
     - [] suppression
     - [] modification
