@@ -15,6 +15,9 @@
 
         <a href="/ticketing/vol/formVol">Inserer un vol </a>
         <a href="/ticketing/vol/listVol">Liste des vols </a>
+        <a href="/ticketing/promotion/formPromotion">Promotion  vols </a>
+        <a href="/ticketing/annulation/formPromotion">Promotion  vols </a>
+        
     
         <%
             Admin admin = (Admin) session.getAttribute("admin"); // ✅ Bon type
