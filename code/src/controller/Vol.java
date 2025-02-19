@@ -10,6 +10,9 @@ import myconnection.MyConnection;
 import session.MySession;
 import utils.ModelView;
 
+import java.text.SimpleDateFormat;
+
+
 @Controller
 public class Vol {
     private int id;
@@ -63,6 +66,83 @@ public class Vol {
         sb.append("ID Ville d'arrivée: ").append(idVilleArrivee).append("\n");
         return sb.toString();
     }
+    
+
+
+    public static List<Vol> rechercherVols(Connection conn, Timestamp dateDepart, Timestamp dateArrivee, 
+                                       Integer idVilleDepart, Integer idVilleArrivee, 
+                                       Double prixMinEco, Double prixMaxEco, 
+                                       Double prixMinBusiness, Double prixMaxBusiness, 
+                                        Integer idAvion) throws SQLException {
+    List<Vol> resultats = new ArrayList<>();
+    
+    String query = "SELECT DISTINCT v.* FROM Vol v " +
+                   "JOIN Avion a ON v.id_avion = a.id " +
+                   "JOIN Prix_siege_vol psv ON v.id = psv.id_vol " +
+                   "WHERE 1=1 "; 
+
+    List<Object> params = new ArrayList<>();
+
+    if (dateDepart != null) {
+        query += "AND DATE(v.date_heure_depart) = ? ";
+        params.add(new java.sql.Date(dateDepart.getTime())); 
+    }
+    if (dateArrivee != null) {
+        query += "AND DATE(v.date_heure_arrivee) = ? ";
+        params.add(new java.sql.Date(dateArrivee.getTime())); 
+    }
+    
+    if (idVilleDepart != null && idVilleDepart>0) {
+        query += "AND v.id_ville_depart = ? ";
+        params.add(idVilleDepart);
+    }
+    if (idVilleArrivee != null && idVilleArrivee>0) {
+        query += "AND v.id_ville_arrivee = ? ";
+        params.add(idVilleArrivee);
+    }
+    if (prixMinEco != null && prixMinEco>0) {
+        query += "AND psv.id_type_siege = 1 AND psv.prix >= ? ";
+        params.add(prixMinEco);
+    }
+    if (prixMaxEco != null && prixMaxEco >0 ) {
+        query += "AND psv.id_type_siege = 1 AND psv.prix <= ? ";
+        params.add(prixMaxEco);
+    }
+    if (prixMinBusiness != null && prixMinBusiness>0) {
+        query += "AND psv.id_type_siege = 2 AND psv.prix >= ? ";
+        params.add(prixMinBusiness);
+    }
+    if (prixMaxBusiness != null && prixMaxBusiness>0) {
+        query += "AND psv.id_type_siege = 2 AND psv.prix <= ? ";
+        params.add(prixMaxBusiness);
+    }
+    if (idAvion != null && idAvion>0) {
+        query += "AND a.id = ? ";
+        params.add(idAvion);
+    }
+
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        for (int i = 0; i < params.size(); i++) {
+            stmt.setObject(i + 1, params.get(i));
+        }
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Vol vol = new Vol();
+                vol.setId(rs.getInt("id"));
+                vol.setDesignation(rs.getString("designation"));
+                vol.setDateHeureDepart(rs.getTimestamp("date_heure_depart"));
+                vol.setDateHeureArrivee(rs.getTimestamp("date_heure_arrivee"));
+                vol.setIdAvion(rs.getInt("id_avion"));
+                vol.setIdVilleDepart(rs.getInt("id_ville_depart"));
+                vol.setIdVilleArrivee(rs.getInt("id_ville_arrivee"));
+                resultats.add(vol);
+            }
+        }
+    }
+    return resultats;
+}
+
     
 
     // Méthode pour insérer un vol
@@ -177,7 +257,7 @@ public class Vol {
     
 
     public  double getPrixSiege(Connection conn, int idTypeSiege) throws SQLException {
-        String query = "SELECT p.prix FROM Prix_siege_vol p WHERE p.id_type_siege = ? AND v.id = ?";
+        String query = "SELECT p.prix FROM Prix_siege_vol p WHERE p.id_type_siege = ? AND p.id_vol = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, idTypeSiege);
             stmt.setInt(2, this.id);
@@ -234,9 +314,13 @@ public class Vol {
             
 
             List<Vol> vols = Vol.getAll(conn);
+
+            List<Avion> avions = Avion.getAll(conn);
+            List<Ville> villes = Ville.getAll(conn);
             
+            map.put("villes", villes);
+            map.put("avions", avions);
             map.put("vols",vols);
-            map.put("connection",conn);
 
 
             String url = "/backOffice/listeVol.jsp";
@@ -311,6 +395,164 @@ public class Vol {
             }
         }
     }
+
+    // @Post()
+    // @Url(url="/vol/filter")
+    // public String filtrerVol( 
+    // @Argument(name="dateDepart") String dateDepart,
+    // @Argument(name="dateArrivee") String dateArrivee,
+    // @Argument(name="villeDepart") int villeDepart,
+    // @Argument(name="villeArrivee") int villeArrivee,
+    // @Argument(name="prixMinEco") double prixMinEco,
+    // @Argument(name="prixMaxEco") double prixMaxEco,
+    // @Argument(name="prixMinBusiness") double prixMinBusiness,
+    // @Argument(name="prixMaxBusiness") double prixMaxBusiness,
+    // @Argument(name="avion") int avion
+    // ) {
+    //     String tout = "";
+        
+    //     // Affichage des paramètres
+    //     tout += "dateDepart: " + dateDepart + "\n";
+    //     tout += "dateArrivee: " + dateArrivee + "\n";
+    //     tout += "villeDepart: " + villeDepart + "\n";
+    //     tout += "villeArrivee: " + villeArrivee + "\n";
+    //     tout += "prixMinEco: " + prixMinEco + "\n";
+    //     tout += "prixMaxEco: " + prixMaxEco + "\n";
+    //     tout += "prixMinBusiness: " + prixMinBusiness + "\n";
+    //     tout += "prixMaxBusiness: " + prixMaxBusiness + "\n";
+    //     tout += "avion: " + avion + "\n";
+        
+    //     // Retourner les informations sous forme de chaîne
+    //     return tout;
+    // }
+
+
+
+
+    @Post()
+    @Url(url="/vol/filter")
+    public ModelView filtrerVol( 
+    @Argument(name="dateDepart") String dateDepart,
+    @Argument(name="dateArrivee") String dateArrivee,
+    @Argument(name="villeDepart") int villeDepart,
+    @Argument(name="villeArrivee") int villeArrivee,
+    @Argument(name="prixMinEco") double prixMinEco,
+    @Argument(name="prixMaxEco") double prixMaxEco,
+    @Argument(name="prixMinBusiness") double prixMinBusiness,
+    @Argument(name="prixMaxBusiness") double prixMaxBusiness,
+    @Argument(name="avion") int avion
+    ) {
+        String tout = "";
+        
+        // Affichage des paramètres
+        tout += "dateDepart: " + dateDepart + "\n";
+        tout += "dateArrivee: " + dateArrivee + "\n";
+        tout += "villeDepart: " + villeDepart + "\n";
+        tout += "villeArrivee: " + villeArrivee + "\n";
+        tout += "prixMinEco: " + prixMinEco + "\n";
+        tout += "prixMaxEco: " + prixMaxEco + "\n";
+        tout += "prixMinBusiness: " + prixMinBusiness + "\n";
+        tout += "prixMaxBusiness: " + prixMaxBusiness + "\n";
+        tout += "avion: " + avion + "\n";
+        
+        System.out.println("TOUT :"+tout);
+
+           System.out.println("DATE ARRIVEE : "+dateArrivee);
+        System.out.println("DATE DEPART : "+dateDepart);
+        List<Vol> volsFiltres = new ArrayList<>();
+
+         // Définir un format de date qui correspond à tes chaînes de date
+         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+         dateFormat.setLenient(false); // Empêche les erreurs silencieuses
+                     
+            try (Connection conn = MyConnection.getConnection()) {
+
+                Timestamp timestampDateDepart = null;
+                Timestamp timestampDateArrivee = null;
+
+        // Convertir les chaînes de caractères en Timestamp
+        if(dateDepart !=null){
+            timestampDateDepart = new Timestamp(dateFormat.parse(dateDepart).getTime());
+        }            
+        if(dateArrivee!=null){
+             timestampDateArrivee = new Timestamp(dateFormat.parse(dateArrivee).getTime());
+
+        }
+
+    
+
+        volsFiltres = Vol.rechercherVols(conn, timestampDateDepart, timestampDateArrivee, villeDepart, villeArrivee, prixMinEco, prixMaxEco, prixMinBusiness, prixMaxBusiness, avion);            
+                HashMap<String, Object> data = new HashMap<>();
+                List<Avion> avions = Avion.getAll(conn);
+                List<Ville> villes = Ville.getAll(conn);
+                
+                data.put("villes", villes);
+                data.put("avions", avions);
+                data.put("vols", volsFiltres);
+                
+                String url = "/backOffice/listeVol.jsp";
+                return new ModelView(url, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+                
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("error", "Une erreur s'est produite.");
+                
+                String url = "/backOffice/dashboard.jsp";
+                return new ModelView(url, data);
+            }
+
+    }
+
+    // @Post()
+    // @Url(url="/vol/filter")
+    // public ModelView filtrerVol( String dateDepart,
+    // String dateArrivee,
+    // int villeDepart,
+    // int villeArrivee,
+    // double prixMinEco,
+    // double prixMaxEco,
+    // double prixMinBusiness,
+    // double prixMaxBusiness,
+    // int avion
+    // ) 
+    // {
+    //     System.out.println("DATE ARRIVEE : "+dateArrivee);
+    //     System.out.println("DATE DEPART : "+dateDepart);
+    //     List<Vol> volsFiltres = new ArrayList<>();
+
+    //      // Définir un format de date qui correspond à tes chaînes de date
+    // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Exemple de format
+        
+    //     try (Connection conn = MyConnection.getConnection()) {
+
+
+    //  // Convertir les chaînes de caractères en Timestamp
+    //  Timestamp timestampDateDepart = new Timestamp(dateFormat.parse(dateDepart).getTime());
+    //  Timestamp timestampDateArrivee = new Timestamp(dateFormat.parse(dateArrivee).getTime());
+
+    //  volsFiltres = Vol.rechercherVols(conn, timestampDateDepart, timestampDateArrivee, villeDepart, villeArrivee, prixMinEco, prixMaxEco, prixMinBusiness, prixMaxBusiness, avion);            
+    //         HashMap<String, Object> data = new HashMap<>();
+    //         List<Avion> avions = Avion.getAll(conn);
+    //         List<Ville> villes = Ville.getAll(conn);
+            
+    //         data.put("villes", villes);
+    //         data.put("avions", avions);
+    //         data.put("vols", volsFiltres);
+            
+    //         String url = "/backOffice/listeVol.jsp";
+    //         return new ModelView(url, data);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+            
+    //         HashMap<String, Object> data = new HashMap<>();
+    //         data.put("error", "Une erreur s'est produite.");
+            
+    //         String url = "/backOffice/dashboard.jsp";
+    //         return new ModelView(url, data);
+    //     }
+    // }
+
   
     
 }
