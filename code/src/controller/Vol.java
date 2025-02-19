@@ -333,6 +333,35 @@ public class Vol {
         }
         
     }
+    
+    @Url(url="/vol/delete")
+    public ModelView deleteVol(@Argument(name="id") int id) {
+
+        try (Connection conn = MyConnection.getConnection()) {
+            HashMap<String,Object> map = new HashMap<>();
+            
+            Vol.delete(conn, id);
+
+            List<Vol> vols = Vol.getAll(conn);
+
+            List<Avion> avions = Avion.getAll(conn);
+            List<Ville> villes = Ville.getAll(conn);
+            
+            map.put("villes", villes);
+            map.put("avions", avions);
+            map.put("vols",vols);
+
+
+            String url = "/backOffice/listeVol.jsp";
+            ModelView mv = new ModelView(url,map);
+        return mv;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
 
     @Post()
     @Url(url="/vol/insert")
@@ -504,54 +533,7 @@ public class Vol {
 
     }
 
-    // @Post()
-    // @Url(url="/vol/filter")
-    // public ModelView filtrerVol( String dateDepart,
-    // String dateArrivee,
-    // int villeDepart,
-    // int villeArrivee,
-    // double prixMinEco,
-    // double prixMaxEco,
-    // double prixMinBusiness,
-    // double prixMaxBusiness,
-    // int avion
-    // ) 
-    // {
-    //     System.out.println("DATE ARRIVEE : "+dateArrivee);
-    //     System.out.println("DATE DEPART : "+dateDepart);
-    //     List<Vol> volsFiltres = new ArrayList<>();
-
-    //      // Définir un format de date qui correspond à tes chaînes de date
-    // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Exemple de format
-        
-    //     try (Connection conn = MyConnection.getConnection()) {
-
-
-    //  // Convertir les chaînes de caractères en Timestamp
-    //  Timestamp timestampDateDepart = new Timestamp(dateFormat.parse(dateDepart).getTime());
-    //  Timestamp timestampDateArrivee = new Timestamp(dateFormat.parse(dateArrivee).getTime());
-
-    //  volsFiltres = Vol.rechercherVols(conn, timestampDateDepart, timestampDateArrivee, villeDepart, villeArrivee, prixMinEco, prixMaxEco, prixMinBusiness, prixMaxBusiness, avion);            
-    //         HashMap<String, Object> data = new HashMap<>();
-    //         List<Avion> avions = Avion.getAll(conn);
-    //         List<Ville> villes = Ville.getAll(conn);
-            
-    //         data.put("villes", villes);
-    //         data.put("avions", avions);
-    //         data.put("vols", volsFiltres);
-            
-    //         String url = "/backOffice/listeVol.jsp";
-    //         return new ModelView(url, data);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-            
-    //         HashMap<String, Object> data = new HashMap<>();
-    //         data.put("error", "Une erreur s'est produite.");
-            
-    //         String url = "/backOffice/dashboard.jsp";
-    //         return new ModelView(url, data);
-    //     }
-    // }
+   
 
   
     
