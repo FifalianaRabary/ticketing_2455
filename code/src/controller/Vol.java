@@ -279,6 +279,17 @@ public class Vol {
             stmt.executeUpdate();
         }
     }
+
+    public void updatePrixSiege(Connection conn, int idVol, int idTypeSiege, double prix) throws SQLException {
+        String query = "UPDATE Prix_siege_vol SET prix = ? WHERE id_vol = ? AND id_type_siege = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setDouble(1, prix);
+            stmt.setInt(2, idVol);
+            stmt.setInt(3, idTypeSiege);
+            stmt.executeUpdate();
+        }
+    }
+    
     
 
 
@@ -295,6 +306,32 @@ public class Vol {
             map.put("avions", avions);
 
             String url = "/backOffice/formulaireVol.jsp";
+            ModelView mv = new ModelView(url,map);
+        return mv;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+
+    @Url(url="/vol/modifier")
+    public ModelView goToFormUpdateVol(@Argument(name="id") int id) {
+
+        try (Connection conn = MyConnection.getConnection()) {
+            HashMap<String,Object> map = new HashMap<>();
+
+            Vol vol = Vol.getById(conn, id);
+            
+            List<Avion> avions = Avion.getAll(conn);
+            List<Ville> villes = Ville.getAll(conn);
+            
+            map.put("villes", villes);
+            map.put("vol",vol);
+            map.put("avions", avions);
+
+            String url = "/backOffice/updateVol.jsp";
             ModelView mv = new ModelView(url,map);
         return mv;
             
@@ -333,7 +370,7 @@ public class Vol {
         }
         
     }
-    
+
     @Url(url="/vol/delete")
     public ModelView deleteVol(@Argument(name="id") int id) {
 
@@ -411,6 +448,78 @@ public class Vol {
             HashMap<String, Object> data = new HashMap<>();
             data.put("error", "Une erreur s'est produite.");
             String url = "/backOffice/dashboard.jsp";
+            return new ModelView(url, data);
+
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true); // Rétablir l'auto-commit
+                    conn.close(); // Fermer la connexion
+                } catch (SQLException closeEx) {
+                    closeEx.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Post()
+    @Url(url="/vol/update")
+    public ModelView updateVol(@Argument(name="vol") Vol vol, @Argument(name="prixEconomique") double prixEconomique, @Argument(name="prixBusiness") double prixBusiness) {
+    
+        vol.printVol();
+        System.out.println("prix eco : " + prixEconomique);
+        System.out.println("prix business : " + prixBusiness);
+    
+        Connection conn = null;
+        try {
+            conn = MyConnection.getConnection();
+            conn.setAutoCommit(false); // Désactiver l'auto-commit
+    
+            if (vol != null && prixEconomique > 0 && prixBusiness > 0) {
+                System.out.println("IF");
+
+                vol.update(conn);
+
+                int id_type_eco = 1;
+                int id_type_business = 2;
+                updatePrixSiege(conn, vol.getId(), id_type_eco, prixEconomique);
+                updatePrixSiege(conn, vol.getId(), id_type_business, prixBusiness);
+    
+                conn.commit(); // Valider la transaction
+
+                HashMap<String, Object> data = new HashMap<>();
+
+
+                List<Vol> vols = Vol.getAll(conn);
+
+                List<Avion> avions = Avion.getAll(conn);
+                List<Ville> villes = Ville.getAll(conn);
+                
+                data.put("villes", villes);
+                data.put("avions", avions);
+                data.put("vols",vols);
+    
+                String url = "/backOffice/listeVol.jsp";
+                return new ModelView(url, data);
+        } else {
+                System.out.println("ELSE");
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("error", "Invalid credentials");
+                String url = "/backOffice/listeVol.jsp";
+                return new ModelView(url, data);
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Annuler la transaction en cas d'erreur
+                } catch (SQLException rollbackEx) {
+                    rollbackEx.printStackTrace();
+                }
+            }
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("error", "Une erreur s'est produite.");
+            String url = "/backOffice/listeVol.jsp";
             return new ModelView(url, data);
 
         } finally {

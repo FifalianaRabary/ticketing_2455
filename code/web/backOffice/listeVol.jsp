@@ -106,7 +106,7 @@
                     <td><%= df.format(prixEco) %> €</td>
                     <td><%= df.format(prixBusiness) %> €</td>
                     <td>
-                        <a href="modifierVol.jsp?id=<%= vol.getId() %>">Modifier</a> |
+                        <a href="/ticketing/vol/modifier?id=<%= vol.getId() %>">Modifier</a> |
                         <a href="/ticketing/vol/delete?id=<%= vol.getId() %>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce vol ?');">Supprimer</a>
                     </td>
                 </tr>
