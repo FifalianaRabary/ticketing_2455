@@ -1,4 +1,4 @@
-insert into Admin(username,mdp) values ('admin','admin');
+insert into Admin(username,mdp,level) values ('fifaliana','admin','admin');
 
 
 -- Insertion des modèles d'avions

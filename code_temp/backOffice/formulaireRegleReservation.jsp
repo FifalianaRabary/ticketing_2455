@@ -15,7 +15,7 @@
         if (vols != null) {
     %>
     
-    <h1>Definir une règle d'annulation de reservation</h1>
+    <h1>Definir une regle de reservation</h1>
 
     <form action="/ticketing/regleReservation/insert" method="post">
         
@@ -36,7 +36,7 @@
 
         <br><br>
 
-        <input type="submit" value="Valider la règle">
+        <input type="submit" value="Valider la regle">
 
     </form>
 

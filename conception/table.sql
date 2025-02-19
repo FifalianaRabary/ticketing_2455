@@ -79,7 +79,8 @@ CREATE TABLE Regle_annulation_reservation (
 CREATE TABLE Admin (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
-    mdp TEXT NOT NULL
+    mdp TEXT NOT NULL,
+    level VARCHAR(50) NOT NULL
 );
 
 -- Création de la table Reservation

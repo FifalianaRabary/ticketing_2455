@@ -83,6 +83,7 @@ public class PromotionSiege {
 
 
     @Url(url="/promotion/formPromotion")
+    @Auth(level="admin")
     public ModelView goToFormPromotion() {
 
         try (Connection conn = MyConnection.getConnection()) {
@@ -108,6 +109,7 @@ public class PromotionSiege {
 
     @Post()
     @Url(url="/promotion/insert")
+    @Auth(level="admin")
     public ModelView insertVol(@Argument(name="promotionSiege") PromotionSiege promotionSiege) {
     
 
