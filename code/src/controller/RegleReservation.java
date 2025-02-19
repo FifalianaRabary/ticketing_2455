@@ -72,6 +72,7 @@ public class RegleReservation {
 
       
     @Url(url="/regleReservation/formRegleReservation")
+    @Auth(level="admin")
     public ModelView goToFormAnnulation() {
 
         try (Connection conn = MyConnection.getConnection()) {
@@ -94,6 +95,7 @@ public class RegleReservation {
 
     @Post()
     @Url(url="/regleReservation/insert")
+    @Auth(level="admin")
     public ModelView insertRegleReservation(@Argument(name="regleReservation") RegleReservation regleReservation) {
     
 

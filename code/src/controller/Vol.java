@@ -294,6 +294,7 @@ public class Vol {
 
 
     @Url(url="/vol/formVol")
+    @Auth(level="admin")
     public ModelView goToFormVol() {
 
         try (Connection conn = MyConnection.getConnection()) {
@@ -317,6 +318,7 @@ public class Vol {
     }
 
     @Url(url="/vol/modifier")
+    @Auth(level="admin")
     public ModelView goToFormUpdateVol(@Argument(name="id") int id) {
 
         try (Connection conn = MyConnection.getConnection()) {
@@ -344,6 +346,7 @@ public class Vol {
 
   
     @Url(url="/vol/listVol")
+    @Auth(level="admin")
     public ModelView goToListVol() {
 
         try (Connection conn = MyConnection.getConnection()) {
@@ -372,6 +375,7 @@ public class Vol {
     }
 
     @Url(url="/vol/delete")
+    @Auth(level="admin")
     public ModelView deleteVol(@Argument(name="id") int id) {
 
         try (Connection conn = MyConnection.getConnection()) {
@@ -402,6 +406,7 @@ public class Vol {
 
     @Post()
     @Url(url="/vol/insert")
+    @Auth(level="admin")
     public ModelView insertVol(@Argument(name="vol") Vol vol, @Argument(name="prixEconomique") double prixEconomique, @Argument(name="prixBusiness") double prixBusiness) {
     
         vol.printVol();
@@ -464,6 +469,7 @@ public class Vol {
 
     @Post()
     @Url(url="/vol/update")
+    @Auth(level="admin")
     public ModelView updateVol(@Argument(name="vol") Vol vol, @Argument(name="prixEconomique") double prixEconomique, @Argument(name="prixBusiness") double prixBusiness) {
     
         vol.printVol();
@@ -569,6 +575,7 @@ public class Vol {
 
     @Post()
     @Url(url="/vol/filter")
+    @Auth(level="admin")
     public ModelView filtrerVol( 
     @Argument(name="dateDepart") String dateDepart,
     @Argument(name="dateArrivee") String dateArrivee,

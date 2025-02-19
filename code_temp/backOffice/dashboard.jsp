@@ -22,11 +22,14 @@
     
         <%
             Admin admin = (Admin) session.getAttribute("admin"); // ✅ Bon type
+            session.setAttribute("role",request.getAttribute("role"));
 
-            if(admin!=null){
+            String role = (String) session.getAttribute("role");
+
+            if(admin!=null && role!=null){
                 System.out.println("HELL YEAH");
             %>
-            <h2 class="my-4">Welcome to your Dashboard!  <%= admin.getUsername() %> </h2>  
+            <h2 class="my-4">Bienvenu dans le dashboard  <%= admin.getUsername() %> <%= role %> !</h2>  
         <% } else {
                 out.println("<p>Error: Admin data is missing.</p>");
             }
