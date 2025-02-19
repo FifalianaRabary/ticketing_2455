@@ -21,7 +21,7 @@
         
     
         <%
-            Admin admin = (Admin) session.getAttribute("admin"); // ✅ Bon type
+            Admin admin = (Admin) session.getAttribute("admin");
             session.setAttribute("role",request.getAttribute("role"));
 
             String role = (String) session.getAttribute("role");

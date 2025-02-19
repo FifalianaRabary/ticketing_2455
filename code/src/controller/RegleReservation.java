@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +69,53 @@ public class RegleReservation {
             stmt.executeUpdate();
         }
     }
+
+
+    public static RegleReservation getByIdVol(Connection conn, int idVol) throws SQLException {
+        String query = "SELECT * FROM Regle_reservation WHERE id_vol = ? LIMIT 1";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idVol);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    RegleReservation regle = new RegleReservation();
+                    regle.setId(rs.getInt("id"));
+                    regle.setIdVol(rs.getInt("id_vol"));
+                    regle.setNbHeureLimiteAvantVol(rs.getInt("nb_heure_limite_avant_vol"));
+                    return regle;
+                }
+            }
+        }
+        return null; // Retourne null si aucune règle n'est trouvée
+    }
+    
+
+    
+
+    public static boolean reservationPossible(Connection conn, int idvol, Reservation reservation) throws Exception
+    {
+        Vol vol = Vol.getById(conn, idvol);
+        RegleReservation regleReservation = getByIdVol(conn, idvol);
+
+        if (vol == null || regleReservation == null) {
+            return false; // Vérifie si les données existent
+        }
+
+        // Convertir Timestamp en LocalDateTime
+        LocalDateTime heureDepart = vol.getDateHeureDepart().toLocalDateTime();
+
+        // Soustraire le nombre d'heures
+        LocalDateTime heureFinReservation = heureDepart.minusHours(regleReservation.getNbHeureLimiteAvantVol());
+
+        // Reconvertir en Timestamp si nécessaire
+        Timestamp heureFinTimestamp = Timestamp.valueOf(heureFinReservation);
+
+        System.out.println("Heure limite de réservation : " + heureFinTimestamp);
+        
+    
+        return reservation.getDateHeureReservation().before(heureFinTimestamp);
+    }
+
+
 
 
       

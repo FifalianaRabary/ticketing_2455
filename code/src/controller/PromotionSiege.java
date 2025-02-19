@@ -29,18 +29,44 @@ public class PromotionSiege {
     public int getNbSiege() { return nbSiege; }
     public void setNbSiege(int nbSiege) { this.nbSiege = nbSiege; }
 
-    public void insert(Connection conn) throws SQLException {
-        String query = "INSERT INTO Promotion_siege (pourcent, id_vol, id_type_siege, nb_siege) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setDouble(1, this.pourcent);
-            stmt.setInt(2, this.idVol);
-            stmt.setInt(3, this.idTypeSiege);
-            stmt.setInt(4, this.nbSiege);
-            stmt.executeUpdate();
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) this.id = rs.getInt(1);
+    public static PromotionSiege estEnPromotion(Connection conn, int idVol, int idTypeSiege) throws SQLException {
+        PromotionSiege promo = null;
+        String query = "SELECT * FROM Promotion_siege WHERE id_vol = ? AND id_type_siege = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idVol);
+            stmt.setInt(2, idTypeSiege);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    promo = new PromotionSiege();
+                    promo.setId(rs.getInt("id"));
+                    promo.setPourcent(rs.getDouble("pourcent"));
+                    promo.setIdVol(rs.getInt("id_vol"));
+                    promo.setIdTypeSiege(rs.getInt("id_type_siege"));
+                    promo.setNbSiege(rs.getInt("nb_siege"));
+                }
             }
         }
+        return promo;  // Retourne l'objet PromotionSiege ou null si aucun enregistrement n'est trouvé
+    }
+    
+    
+
+    public void insert(Connection conn) throws SQLException {
+
+        if(estEnPromotion(conn, this.getIdVol(), this.getIdTypeSiege())!=null){
+            String query = "INSERT INTO Promotion_siege (pourcent, id_vol, id_type_siege, nb_siege) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setDouble(1, this.pourcent);
+                stmt.setInt(2, this.idVol);
+                stmt.setInt(3, this.idTypeSiege);
+                stmt.setInt(4, this.nbSiege);
+                stmt.executeUpdate();
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) this.id = rs.getInt(1);
+                }
+            }
+        }
+    
     }
 
     public static List<PromotionSiege> getAll(Connection conn) throws SQLException {
@@ -80,6 +106,28 @@ public class PromotionSiege {
             stmt.executeUpdate();
         }
     }
+
+    public static PromotionSiege getByVolAndTypeSiege(Connection conn, int idVol, int idTypeSiege) throws SQLException {
+        PromotionSiege promo = null;
+        String query = "SELECT * FROM Promotion_siege WHERE id_vol = ? AND id_type_siege = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idVol);
+            stmt.setInt(2, idTypeSiege);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    promo = new PromotionSiege();
+                    promo.setId(rs.getInt("id"));
+                    promo.setPourcent(rs.getDouble("pourcent"));
+                    promo.setIdVol(rs.getInt("id_vol"));
+                    promo.setIdTypeSiege(rs.getInt("id_type_siege"));
+                    promo.setNbSiege(rs.getInt("nb_siege"));
+                }
+            }
+        }
+        return promo;
+    }
+    
+    
 
 
     @Url(url="/promotion/formPromotion")

@@ -1,0 +1,63 @@
+<%@ page import="controller.Vol" %>
+<%@ page import="controller.TypeSiege" %>
+<%@ page import="controller.Client" %>
+<%@ page import="java.util.List" %>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserver un Vol</title>
+</head>
+<body>
+    <%
+        List<Vol> vols = (List<Vol>) request.getAttribute("vols");
+        List<TypeSiege> typeSieges = (List<TypeSiege>) request.getAttribute("typeSieges");
+
+        Client client = (Client) session.getAttribute("Client");
+
+        //int idClient = client.getId();
+        int idClient = 1;
+
+        if (vols != null && typeSieges != null && idClient >0) {
+    %>
+    
+    <h2>Reserver un Vol</h2>
+
+    <form action="/ticketing/reservation/insert" method="post">
+
+        <!-- ID Client cache -->
+        <input type="hidden" name="reservation.idClient" value="<%= idClient %>">
+
+        <!-- Selection du vol -->
+        <label for="vol">Vol :</label>
+        <select name="reservation.idVol" id="vol" required>
+            <option value="">Choisir un vol</option>
+            <% for (Vol vol : vols) { %>
+                <option value="<%= vol.getId() %>"><%= vol.getDesignation() %></option>
+            <% } %>
+        </select>
+
+        <br><br>
+
+        <!-- Selection du type de siège -->
+        <label for="typeSiege">Type de Siège :</label>
+        <select name="reservation.idTypeSiege" id="typeSiege" required>
+            <option value="">Choisir un type de siège</option>
+            <% for (TypeSiege type : typeSieges) { %>
+                <option value="<%= type.getId() %>"><%= type.getDesignation() %></option>
+            <% } %>
+        </select>
+
+        <br><br>
+
+
+        <input type="submit" value="Reserver le Vol">
+    </form>
+
+    <% } else { %>
+        <h2>Les donnees necessaires (vols, types de sièges ou client) sont manquantes.</h2>
+    <% } %>
+</body>
+</html>

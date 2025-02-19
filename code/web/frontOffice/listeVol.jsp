@@ -82,6 +82,7 @@
                 <th>Heure Arrivée</th>
                 <th>Prix Économique</th>
                 <th>Prix Business</th>
+                <th>Reservation</th>
             </tr>
         </thead>
         <tbody>
@@ -104,6 +105,7 @@
                     <td><%= vol.getDateHeureArrivee() %></td>
                     <td><%= df.format(prixEco) %> €</td>
                     <td><%= df.format(prixBusiness) %> €</td>
+                    <a href="/ticketing/reservation/reserver?id=<%= vol.getId() %>">Reserver</a> |
                 </tr>
             <%
                         }

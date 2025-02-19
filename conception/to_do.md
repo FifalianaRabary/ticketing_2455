@@ -18,7 +18,8 @@
 - [X] check level
 
 # FRONTOFFICE
-- [] liste vol
-- [] recherche multicritère de vol : date depart, date arrivee, ville depart, ville arrivee, prix max, prix min, modèle, avion
+- [X] login
+- [X] liste vol
+- [X] recherche multicritère de vol : date depart, date arrivee, ville depart, ville arrivee, prix max, prix min, modèle, avion
 - [] insertion reservation
 
