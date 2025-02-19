@@ -374,6 +374,34 @@ public class Vol {
         
     }
 
+    @Url(url="/vol/listVolFront")
+    public ModelView goToListVolFront() {
+
+        try (Connection conn = MyConnection.getConnection()) {
+            HashMap<String,Object> map = new HashMap<>();
+            
+
+            List<Vol> vols = Vol.getAll(conn);
+
+            List<Avion> avions = Avion.getAll(conn);
+            List<Ville> villes = Ville.getAll(conn);
+            
+            map.put("villes", villes);
+            map.put("avions", avions);
+            map.put("vols",vols);
+
+
+            String url = "/frontOffice/listeVol.jsp";
+            ModelView mv = new ModelView(url,map);
+        return mv;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+
     @Url(url="/vol/delete")
     @Auth(level="admin")
     public ModelView deleteVol(@Argument(name="id") int id) {
@@ -644,6 +672,83 @@ public class Vol {
                 data.put("error", "Une erreur s'est produite.");
                 
                 String url = "/backOffice/dashboard.jsp";
+                return new ModelView(url, data);
+            }
+
+    }
+
+
+
+    @Post()
+    @Url(url="/vol/filterFront")
+    public ModelView filtrerVolFront( 
+    @Argument(name="dateDepart") String dateDepart,
+    @Argument(name="dateArrivee") String dateArrivee,
+    @Argument(name="villeDepart") int villeDepart,
+    @Argument(name="villeArrivee") int villeArrivee,
+    @Argument(name="prixMinEco") double prixMinEco,
+    @Argument(name="prixMaxEco") double prixMaxEco,
+    @Argument(name="prixMinBusiness") double prixMinBusiness,
+    @Argument(name="prixMaxBusiness") double prixMaxBusiness,
+    @Argument(name="avion") int avion
+    ) {
+        String tout = "";
+        
+        // Affichage des paramètres
+        tout += "dateDepart: " + dateDepart + "\n";
+        tout += "dateArrivee: " + dateArrivee + "\n";
+        tout += "villeDepart: " + villeDepart + "\n";
+        tout += "villeArrivee: " + villeArrivee + "\n";
+        tout += "prixMinEco: " + prixMinEco + "\n";
+        tout += "prixMaxEco: " + prixMaxEco + "\n";
+        tout += "prixMinBusiness: " + prixMinBusiness + "\n";
+        tout += "prixMaxBusiness: " + prixMaxBusiness + "\n";
+        tout += "avion: " + avion + "\n";
+        
+        System.out.println("TOUT :"+tout);
+
+           System.out.println("DATE ARRIVEE : "+dateArrivee);
+        System.out.println("DATE DEPART : "+dateDepart);
+        List<Vol> volsFiltres = new ArrayList<>();
+
+         // Définir un format de date qui correspond à tes chaînes de date
+         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+         dateFormat.setLenient(false); // Empêche les erreurs silencieuses
+                     
+            try (Connection conn = MyConnection.getConnection()) {
+
+                Timestamp timestampDateDepart = null;
+                Timestamp timestampDateArrivee = null;
+
+        // Convertir les chaînes de caractères en Timestamp
+        if(dateDepart !=null){
+            timestampDateDepart = new Timestamp(dateFormat.parse(dateDepart).getTime());
+        }            
+        if(dateArrivee!=null){
+             timestampDateArrivee = new Timestamp(dateFormat.parse(dateArrivee).getTime());
+
+        }
+
+    
+
+        volsFiltres = Vol.rechercherVols(conn, timestampDateDepart, timestampDateArrivee, villeDepart, villeArrivee, prixMinEco, prixMaxEco, prixMinBusiness, prixMaxBusiness, avion);            
+                HashMap<String, Object> data = new HashMap<>();
+                List<Avion> avions = Avion.getAll(conn);
+                List<Ville> villes = Ville.getAll(conn);
+                
+                data.put("villes", villes);
+                data.put("avions", avions);
+                data.put("vols", volsFiltres);
+                
+                String url = "/frontOffice/listeVol.jsp";
+                return new ModelView(url, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+                
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("error", "Une erreur s'est produite.");
+                
+                String url = "/frontOffice/dashboard.jsp";
                 return new ModelView(url, data);
             }
 

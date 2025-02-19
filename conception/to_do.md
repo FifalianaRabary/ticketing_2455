@@ -15,6 +15,8 @@
         - [X] nb heure avant vol qui determine fin de prise de reservation
         - [X] nb heure avant vol qui determine fin de prise d'annulation de reservation
 
+- [X] check level
+
 # FRONTOFFICE
 - [] liste vol
 - [] recherche multicritère de vol : date depart, date arrivee, ville depart, ville arrivee, prix max, prix min, modèle, avion
