@@ -1,6 +1,6 @@
-<%@ page import="controller.Vol" %>
-<%@ page import="controller.TypeSiege" %>
-<%@ page import="controller.Client" %>
+<%@ page import="model.Vol" %>
+<%@ page import="model.TypeSiege" %>
+<%@ page import="model.Client" %>
 <%@ page import="java.util.List" %>
 
 <!DOCTYPE html>
@@ -22,6 +22,11 @@
 
         if (vols != null && typeSieges != null && idClient >0) {
     %>
+
+    <a href="/ticketing/vol/listVolFront">Liste des vols </a>
+        <br>
+    <a href="/ticketing/reservation/formReservation">Faire une reservation </a>
+    <br>
     
     <h2>Reserver un Vol</h2>
 
@@ -55,6 +60,10 @@
 
         <input type="submit" value="Reserver le Vol">
     </form>
+
+
+    <a href="/ticketing/user/logout">Logout </a>
+
 
     <% } else { %>
         <h2>Les donnees necessaires (vols, types de sièges ou client) sont manquantes.</h2>

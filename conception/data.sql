@@ -1,5 +1,5 @@
-insert into Admin(username,mdp,level) values ('fifaliana','admin','admin');
-insert into Client(username,mdp,level) values ('fifaliana','aaa','client');
+insert into Utilisateur(username,mdp,level) values ('fifaliana','admin','admin');
+insert into Utilisateur(username,mdp,level) values ('fifa','fifa','user');
 
 
 -- Insertion des modèles d'avions

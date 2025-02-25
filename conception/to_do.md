@@ -22,4 +22,7 @@
 - [X] liste vol
 - [X] recherche multicritère de vol : date depart, date arrivee, ville depart, ville arrivee, prix max, prix min, modèle, avion
 - [] insertion reservation
-
+    - [] ajout nb siege en promo restant dans la table PromotionSiege
+    - [] estGuichetFermer(vol,type_siege) : return nb place dispo == 0
+    - [] calculPrixReservation () : jerena raha misy promotion lay classe, jerena raha nbSiegeRestant > 0 => mahazo promotion si oui 
+    - [] reservation 

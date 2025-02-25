@@ -1,6 +1,6 @@
 package test;
 
-import controller.Avion;
+import model.Avion;
 import myconnection.MyConnection;
 
 import java.sql.Connection;

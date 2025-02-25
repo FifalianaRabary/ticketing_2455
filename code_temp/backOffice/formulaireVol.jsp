@@ -1,6 +1,6 @@
-<%@ page import="controller.Vol" %>
-<%@ page import="controller.Avion" %>
-<%@ page import="controller.Ville" %>
+<%@ page import="model.Vol" %>
+<%@ page import="model.Avion" %>
+<%@ page import="model.Ville" %>
 <%@ page import="java.util.List" %>
 
 <!DOCTYPE html>
@@ -17,6 +17,15 @@
 
         if (villes != null && avions != null) {
     %>
+
+    <a href="/ticketing/vol/formVol">Inserer un vol </a>
+        <a href="/ticketing/vol/listVol">Liste des vols </a>
+        <a href="/ticketing/promotion/formPromotion">Promotion  vols </a>
+        <br>
+        <a href="/ticketing/annulation/formAnnulation">Annulation  reservation </a>
+        <br>
+        <a href="/ticketing/regleReservation/formRegleReservation">Regle de  reservation </a>
+        <br>
     
     <h2>Ajouter un Nouveau Vol</h2>
 
@@ -80,6 +89,9 @@
 
         <input type="submit" value="Ajouter le Vol">
     </form>
+
+    <a href="/ticketing/user/logout">Logout </a>
+
 
     <% } else { %>
         <h2>Les données nécessaires (villes ou avions) sont manquantes.</h2>

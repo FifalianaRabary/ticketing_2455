@@ -52,6 +52,14 @@ CREATE TABLE Prix_siege_vol(
 
 );
 
+CREATE TABLE Place_dispo_vol(
+    id SERIAL PRIMARY KEY,
+    id_vol INT REFERENCES Vol(id) ON DELETE SET NULL,
+    id_type_siege INT REFERENCES Type_siege(id) ON DELETE SET NULL,
+    nb INT
+
+);
+
 -- Création de la table Promotion_siege
 CREATE TABLE Promotion_siege (
     id SERIAL PRIMARY KEY,
@@ -76,7 +84,7 @@ CREATE TABLE Regle_annulation_reservation (
 );
 
 -- Création de la table Admin
-CREATE TABLE Admin (
+CREATE TABLE Utilisateur (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     mdp TEXT NOT NULL,
@@ -84,17 +92,12 @@ CREATE TABLE Admin (
 );
 
 
-CREATE TABLE Client(
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    mdp TEXT NOT NULL,
-    level VARCHAR(50) NOT NULL
-);
+
 
 -- Création de la table Reservation
 CREATE TABLE Reservation (
     id SERIAL PRIMARY KEY,
-    id_client INT REFERENCES Client(id) ON DELETE CASCADE,
+    id_utilisateur INT REFERENCES Utilisateur(id) ON DELETE CASCADE,
     date_heure_reservation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_vol INT REFERENCES Vol(id) ON DELETE CASCADE,
     id_type_siege INT REFERENCES Type_siege(id) ON DELETE CASCADE,
