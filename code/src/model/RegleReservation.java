@@ -90,29 +90,7 @@ public class RegleReservation {
 
     
 
-    public static boolean reservationPossible(Connection conn, int idvol, Reservation reservation) throws Exception
-    {
-        Vol vol = Vol.getById(conn, idvol);
-        RegleReservation regleReservation = getByIdVol(conn, idvol);
-
-        if (vol == null || regleReservation == null) {
-            return false; // Vérifie si les données existent
-        }
-
-        // Convertir Timestamp en LocalDateTime
-        LocalDateTime heureDepart = vol.getDateHeureDepart().toLocalDateTime();
-
-        // Soustraire le nombre d'heures
-        LocalDateTime heureFinReservation = heureDepart.minusHours(regleReservation.getNbHeureLimiteAvantVol());
-
-        // Reconvertir en Timestamp si nécessaire
-        Timestamp heureFinTimestamp = Timestamp.valueOf(heureFinReservation);
-
-        System.out.println("Heure limite de réservation : " + heureFinTimestamp);
-        
     
-        return reservation.getDateHeureReservation().before(heureFinTimestamp);
-    }
 
 
 

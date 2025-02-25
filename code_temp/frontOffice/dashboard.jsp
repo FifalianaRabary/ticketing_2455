@@ -11,11 +11,6 @@
 
 
     <div class="new-container">
-
-        <a href="/ticketing/vol/listVolFront">Liste des vols </a>
-        <br>
-        <a href="/ticketing/reservation/formReservation">Faire une reservation </a>
-    
         <%
             Utilisateur user = (Utilisateur) session.getAttribute("user");
             String role = (String) session.getAttribute("role");
@@ -23,6 +18,16 @@
             if(user!=null && role!=null){
                 System.out.println("HELL YEAH");
             %>
+            
+
+        <a href="/ticketing/vol/listVolFront">Liste des vols </a>
+        <br>
+        <a href="/ticketing/reservation/formReservation">Faire une reservation </a>
+        <br>
+        <a href="/ticketing/reservation/listReservation?id=<%= user.getId() %>">Voir mes reservations </a>
+
+    
+        
             <h2 class="my-4">Bienvenu dans le dashboard  <%= user.getUsername() %> <%= role %> !</h2>  
         <% } else {
                 out.println("<p>Error: user data is missing.</p>");

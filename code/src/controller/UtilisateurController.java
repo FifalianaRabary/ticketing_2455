@@ -91,17 +91,19 @@ public class UtilisateurController {
             if(Utilisateur.checkLogin(conn, user.getUsername(), user.getMdp())){
                 System.out.println("IF");
 
-                String level = Utilisateur.getLevelByUsername(conn, user.getUsername());
+                // String level = Utilisateur.getLevelByUsername(conn, user.getUsername());
+                Utilisateur utilisateur = Utilisateur.getByUsername(conn, user.getUsername());
 
-                session.add("user",user);
-                session.add("role",level);
+
+                session.add("user",utilisateur);
+                session.add("role",utilisateur.getLevel());
     
                 HashMap<String, Object> data = new HashMap<>();
 
                 // data.put("role",level);
                 String url = null;
                 
-                if(level.equals("admin")){
+                if(utilisateur.getLevel().equals("admin")){
                     url = "/backOffice/dashboard.jsp";
                 }
                 else{

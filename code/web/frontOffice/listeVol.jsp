@@ -25,6 +25,11 @@
     <br>
     <a href="/ticketing/reservation/formReservation">Faire une reservation </a>
     <br>
+    <%
+        Utilisateur user = (Utilisateur) session.getAttribute("user");
+    %>
+    <a href="/ticketing/reservation/listReservation?id=<%= user.getId() %>">Voir mes reservations </a>
+
     
     <h2>Recherche de Vols</h2>
     <form method="POST" action="/ticketing/vol/filterFront">

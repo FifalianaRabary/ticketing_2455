@@ -97,6 +97,24 @@ public class Utilisateur {
         return null;
     }
 
+    public static Utilisateur getByUsername(Connection conn, String username) throws SQLException {
+        String query = "SELECT * FROM Utilisateur WHERE username = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Utilisateur user = new Utilisateur();
+                    user.setId(rs.getInt("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setMdp(rs.getString("mdp"));
+                    user.setLevel(rs.getString("level"));
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
+
     public static String getLevelByUsername(Connection conn, String username) throws SQLException {
         String query = "SELECT level FROM Utilisateur WHERE username = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {

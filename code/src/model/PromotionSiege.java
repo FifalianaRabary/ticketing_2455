@@ -31,7 +31,7 @@ public class PromotionSiege {
 
     public static PromotionSiege estEnPromotion(Connection conn, int idVol, int idTypeSiege) throws SQLException {
         PromotionSiege promo = null;
-        String query = "SELECT * FROM Promotion_siege WHERE id_vol = ? AND id_type_siege = ?";
+        String query = "SELECT * FROM promotion_siege WHERE id_vol = ? AND id_type_siege = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, idVol);
             stmt.setInt(2, idTypeSiege);
@@ -53,8 +53,9 @@ public class PromotionSiege {
 
     public void insert(Connection conn) throws SQLException {
 
-        if(estEnPromotion(conn, this.getIdVol(), this.getIdTypeSiege())!=null){
-            String query = "INSERT INTO Promotion_siege (pourcent, id_vol, id_type_siege, nb_siege) VALUES (?, ?, ?, ?)";
+        System.out.println("TAFIDITRA INSERTION PROMOTION");
+        if(estEnPromotion(conn, this.getIdVol(), this.getIdTypeSiege())==null){
+            String query = "INSERT INTO promotion_siege (pourcent, id_vol, id_type_siege, nb_siege) VALUES (?, ?, ?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
                 stmt.setDouble(1, this.pourcent);
                 stmt.setInt(2, this.idVol);
@@ -71,7 +72,7 @@ public class PromotionSiege {
 
     public static List<PromotionSiege> getAll(Connection conn) throws SQLException {
         List<PromotionSiege> promotions = new ArrayList<>();
-        String query = "SELECT * FROM Promotion_siege";
+        String query = "SELECT * FROM promotion_siege";
         try (PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -88,7 +89,7 @@ public class PromotionSiege {
     }
 
     public void update(Connection conn) throws SQLException {
-        String query = "UPDATE Promotion_siege SET pourcent = ?, id_vol = ?, id_type_siege = ?, nb_siege = ? WHERE id = ?";
+        String query = "UPDATE promotion_siege SET pourcent = ?, id_vol = ?, id_type_siege = ?, nb_siege = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setDouble(1, this.pourcent);
             stmt.setInt(2, this.idVol);
@@ -100,16 +101,24 @@ public class PromotionSiege {
     }
 
     public void delete(Connection conn) throws SQLException {
-        String query = "DELETE FROM Promotion_siege WHERE id = ?";
+        String query = "DELETE FROM promotion_siege WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, this.id);
             stmt.executeUpdate();
         }
     }
 
+    public static void deleteByIdVol(Connection conn, int id_vol) throws SQLException {
+        String query = "DELETE FROM promotion_siege WHERE id_vol = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id_vol);
+            stmt.executeUpdate();
+        }
+    }
+
     public static PromotionSiege getByVolAndTypeSiege(Connection conn, int idVol, int idTypeSiege) throws SQLException {
         PromotionSiege promo = null;
-        String query = "SELECT * FROM Promotion_siege WHERE id_vol = ? AND id_type_siege = ?";
+        String query = "SELECT * FROM promotion_siege WHERE id_vol = ? AND id_type_siege = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, idVol);
             stmt.setInt(2, idTypeSiege);
@@ -126,6 +135,26 @@ public class PromotionSiege {
         }
         return promo;
     }
+
+    public static PromotionSiege getById(Connection conn, int id) throws SQLException {
+        PromotionSiege promo = null;
+        String query = "SELECT * FROM promotion_siege WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    promo = new PromotionSiege();
+                    promo.setId(rs.getInt("id"));
+                    promo.setPourcent(rs.getDouble("pourcent"));
+                    promo.setIdVol(rs.getInt("id_vol"));
+                    promo.setIdTypeSiege(rs.getInt("id_type_siege"));
+                    promo.setNbSiege(rs.getInt("nb_siege"));
+                }
+            }
+        }
+        return promo;  // Retourne l'objet PromotionSiege ou null si aucun enregistrement n'est trouvé
+    }
+    
     
     
 

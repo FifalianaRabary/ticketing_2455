@@ -136,6 +136,7 @@ public class VolController {
             
             Vol.deletePlaceDispoByVol(conn,id);
             Vol.deletePrixSiegeByVol(conn,id);
+            PromotionSiege.deleteByIdVol(conn,id);
             Vol.delete(conn, id);
            
             List<Vol> vols = Vol.getAll(conn);

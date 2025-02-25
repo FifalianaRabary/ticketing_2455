@@ -45,7 +45,7 @@ public class PromotionSiegeController {
     @Auth(level="admin")
     public ModelView insertVol(@Argument(name="promotionSiege") PromotionSiege promotionSiege) {
     
-
+        System.out.println("TAFIDITRA CONTROLLER INSERT PROMO");
     
         Connection conn = null;
         try {
@@ -53,7 +53,7 @@ public class PromotionSiegeController {
             conn.setAutoCommit(false); // Désactiver l'auto-commit
     
             if (promotionSiege != null ) {
-                System.out.println("IF");
+                System.out.println("IF PROMO SIEGE");
     
     
                 promotionSiege.insert(conn);

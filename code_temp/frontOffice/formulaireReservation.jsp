@@ -1,6 +1,6 @@
 <%@ page import="model.Vol" %>
 <%@ page import="model.TypeSiege" %>
-<%@ page import="model.Client" %>
+<%@ page import="model.Utilisateur" %>
 <%@ page import="java.util.List" %>
 
 <!DOCTYPE html>
@@ -11,29 +11,37 @@
     <title>Reserver un Vol</title>
 </head>
 <body>
+
     <%
         List<Vol> vols = (List<Vol>) request.getAttribute("vols");
         List<TypeSiege> typeSieges = (List<TypeSiege>) request.getAttribute("typeSieges");
 
-        Client client = (Client) session.getAttribute("Client");
+        Utilisateur user = (Utilisateur) session.getAttribute("user");
 
-        //int idClient = client.getId();
-        int idClient = 1;
+        int idClient = user.getId();
 
-        if (vols != null && typeSieges != null && idClient >0) {
+        if(user==null){
+            System.out.println("user est null");
+        }
+       
+    
+
+        if (vols != null && typeSieges != null) {
     %>
 
     <a href="/ticketing/vol/listVolFront">Liste des vols </a>
         <br>
     <a href="/ticketing/reservation/formReservation">Faire une reservation </a>
     <br>
+    <a href="/ticketing/reservation/listReservation?id=i<%= idClient %>">Voir mes reservations</a>
+
     
     <h2>Reserver un Vol</h2>
 
     <form action="/ticketing/reservation/insert" method="post">
 
         <!-- ID Client cache -->
-        <input type="hidden" name="reservation.idClient" value="<%= idClient %>">
+        <input type="hidden" name="reservation.idUtilisateur" value="<%= idClient %>">
 
         <!-- Selection du vol -->
         <label for="vol">Vol :</label>

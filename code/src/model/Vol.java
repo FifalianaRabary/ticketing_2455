@@ -342,6 +342,77 @@ public class Vol {
             stmt.executeUpdate();
         }
     }
+
+    public static PromotionSiege getPromotionSiDispo(Connection conn, int id_vol, int id_type_siege) {
+        PromotionSiege promo = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Requête pour obtenir l'ID de la promotion si dispo
+            String sql = "SELECT id_promotion FROM Promotions_Disponibles " +
+                         "WHERE id_vol = ? AND id_type_siege = ? AND nb_promotions_dispo > 0 LIMIT 1";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id_vol);
+            stmt.setInt(2, id_type_siege);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int id_promotion = rs.getInt("id_promotion");
+                promo = PromotionSiege.getById(conn, id_promotion);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return promo;
+    }
+
+    public static void decrementerNbPlaceDispo(Connection conn, int idVol, int idTypeSiege) throws SQLException {
+        String query = "UPDATE Place_dispo_vol SET nb = nb - 1 WHERE id_vol = ? AND id_type_siege = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idVol);  
+            stmt.setInt(2, idTypeSiege);  
+            int rowsUpdated = stmt.executeUpdate(); 
+            
+            if (rowsUpdated == 0) {
+                System.out.println("Aucune ligne mise à jour, vérifiez si les ID sont corrects.");
+            } else {
+                System.out.println("Le nombre de places disponibles a été décrémenté avec succès.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la décrémentation des places disponibles : " + e.getMessage());
+            throw e;  
+        }
+    }
+
+    public static void incrementerNbPlaceDispo(Connection conn, int idVol, int idTypeSiege) throws SQLException {
+        String query = "UPDATE Place_dispo_vol SET nb = nb + 1 WHERE id_vol = ? AND id_type_siege = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idVol);  
+            stmt.setInt(2, idTypeSiege);  
+            int rowsUpdated = stmt.executeUpdate(); 
+            
+            if (rowsUpdated == 0) {
+                System.out.println("Aucune ligne mise à jour, vérifiez si les ID sont corrects.");
+            } else {
+                System.out.println("Le nombre de places disponibles a été décrémenté avec succès.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la décrémentation des places disponibles : " + e.getMessage());
+            throw e;  
+        }
+    }
+    
       
 
 }

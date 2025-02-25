@@ -68,6 +68,29 @@ public class RegleAnnulationReservation {
         }
     }
 
+    public static RegleAnnulationReservation getByIdVol(Connection conn, int idVol) throws SQLException {
+        String query = "SELECT * FROM Regle_annulation_reservation WHERE id_vol = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idVol);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Si un résultat est trouvé, on crée un objet et on le retourne
+                    RegleAnnulationReservation regle = new RegleAnnulationReservation();
+                    regle.setId(rs.getInt("id"));
+                    regle.setIdVol(rs.getInt("id_vol"));
+                    regle.setNbHeureLimiteAvantVol(rs.getInt("nb_heure_limite_avant_vol"));
+                    return regle;
+                }
+            }
+        }
+        return null;  // Retourne null si aucune règle n'a été trouvée pour cet id_vol
+    }
+
+    
+
+
+
 
     
    
