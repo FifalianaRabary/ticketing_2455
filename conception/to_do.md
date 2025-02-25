@@ -15,8 +15,15 @@
         - [X] nb heure avant vol qui determine fin de prise de reservation
         - [X] nb heure avant vol qui determine fin de prise d'annulation de reservation
 
-# FRONTOFFICE
-- [] liste vol
-- [] recherche multicritère de vol : date depart, date arrivee, ville depart, ville arrivee, prix max, prix min, modèle, avion
-- [] insertion reservation
+- [X] check level
 
+# FRONTOFFICE
+- [X] login
+- [X] liste vol
+- [X] recherche multicritère de vol : date depart, date arrivee, ville depart, ville arrivee, prix max, prix min, modèle, avion
+- [] insertion reservation
+    - [X] vue Promotions_Disponibles
+    - [X] estDansLesTemps reservation
+    - [X] estGuichetFermer(vol,type_siege) : return nb place dispo == 0
+    - [] calculPrixReservation () : jerena raha misy promotion lay classe, jerena raha nbSiegeRestant > 0 => mahazo promotion si oui 
+    - [] reservation 

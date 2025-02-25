@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="controller.Vol" %>
-<%@ page import="controller.Avion" %>
-<%@ page import="controller.Ville" %>
+<%@ page import="model.Vol" %>
+<%@ page import="model.Avion" %>
+<%@ page import="model.Ville" %>
 <%@ page import="myconnection.MyConnection" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.DecimalFormat" %>
@@ -21,6 +21,15 @@
     <title>Liste des Vols</title>
 </head>
 <body>
+
+    <a href="/ticketing/vol/formVol">Inserer un vol </a>
+        <a href="/ticketing/vol/listVol">Liste des vols </a>
+        <a href="/ticketing/promotion/formPromotion">Promotion  vols </a>
+        <br>
+        <a href="/ticketing/annulation/formAnnulation">Annulation  reservation </a>
+        <br>
+        <a href="/ticketing/regleReservation/formRegleReservation">Regle de  reservation </a>
+        <br>
 
     <h2>Recherche de Vols</h2>
     <form method="POST" action="/ticketing/vol/filter">
@@ -124,6 +133,10 @@
             %>
         </tbody>
     </table>
+    <br>
+
+    <a href="/ticketing/user/logout">Logout </a>
+
 
 </body>
 </html>

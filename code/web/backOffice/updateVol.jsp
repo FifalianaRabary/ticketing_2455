@@ -1,6 +1,6 @@
-<%@ page import="controller.Vol" %>
-<%@ page import="controller.Avion" %>
-<%@ page import="controller.Ville" %>
+<%@ page import="model.Vol" %>
+<%@ page import="model.Avion" %>
+<%@ page import="model.Ville" %>
 <%@ page import="myconnection.MyConnection" %>
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.util.List" %>
@@ -24,6 +24,16 @@
                 Ville villeDepart = Ville.getById(conn, vol.getIdVilleDepart());
                 Ville villeArrivee = Ville.getById(conn, vol.getIdVilleArrivee());
     %>
+
+
+    <a href="/ticketing/vol/formVol">Inserer un vol </a>
+        <a href="/ticketing/vol/listVol">Liste des vols </a>
+        <a href="/ticketing/promotion/formPromotion">Promotion  vols </a>
+        <br>
+        <a href="/ticketing/annulation/formAnnulation">Annulation  reservation </a>
+        <br>
+        <a href="/ticketing/regleReservation/formRegleReservation">Regle de  reservation </a>
+        <br>
     
     <h2>Modifier le Vol</h2>
 
@@ -101,5 +111,8 @@
     %>
         <h2>Les données nécessaires (villes, avions ou vol) sont manquantes.</h2>
     <% } %>
+
+    <a href="/ticketing/user/logout">Logout </a>
+
 </body>
 </html>

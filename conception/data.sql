@@ -1,4 +1,5 @@
-insert into Admin(username,mdp,level) values ('fifaliana','admin','admin');
+insert into Utilisateur(username,mdp,level) values ('fifaliana','admin','admin');
+insert into Utilisateur(username,mdp,level) values ('fifa','fifa','user');
 
 
 -- Insertion des modèles d'avions
@@ -42,4 +43,18 @@ INSERT INTO Ville (designation) VALUES
 ('Londres'),
 ('Dubai'),
 ('Los Angeles');
+
+
+-- vue
+CREATE OR REPLACE VIEW Promotions_Disponibles AS
+SELECT 
+    p.id AS id_promotion,  
+    p.id_vol, 
+    p.id_type_siege, 
+    GREATEST(p.nb_siege - COALESCE(COUNT(r.id), 0), 0) AS nb_promotions_dispo
+FROM Promotion_siege p
+LEFT JOIN Reservation r 
+    ON p.id_vol = r.id_vol 
+    AND p.id_type_siege = r.id_type_siege
+GROUP BY p.id, p.id_vol, p.id_type_siege, p.nb_siege;
 

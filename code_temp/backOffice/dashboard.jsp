@@ -1,5 +1,5 @@
 
-<%@ page import="controller.Admin" %>
+<%@ page import="model.Utilisateur" %>
 <%@ page import="session.MySession" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
@@ -16,16 +16,18 @@
         <a href="/ticketing/vol/formVol">Inserer un vol </a>
         <a href="/ticketing/vol/listVol">Liste des vols </a>
         <a href="/ticketing/promotion/formPromotion">Promotion  vols </a>
+        <br>
         <a href="/ticketing/annulation/formAnnulation">Annulation  reservation </a>
+        <br>
         <a href="/ticketing/regleReservation/formRegleReservation">Regle de  reservation </a>
+        <br>
+
         
     
         <%
-            Admin admin = (Admin) session.getAttribute("admin"); // ✅ Bon type
-            session.setAttribute("role",request.getAttribute("role"));
-
+            Utilisateur admin = (Utilisateur) session.getAttribute("user");
             String role = (String) session.getAttribute("role");
-
+            
             if(admin!=null && role!=null){
                 System.out.println("HELL YEAH");
             %>
@@ -37,9 +39,8 @@
     
     <%-- Inclure ici d'autres éléments de l'interface admin si nécessaire --%>
 
-    <form action="/ticketing/admin/logout" method="post">
-        <input type="submit" value="logout">
-    </form>
+    <a href="/ticketing/user/logout">Logout </a>
+
     </div>
 
     </main>
