@@ -1,17 +1,15 @@
-<%@ page import="model.Vol" %>
-<%@ page import="model.TypeSiege" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="model.Utilisateur" %>
-<%@ page import="java.util.List" %>
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserver un Vol</title>
+    <title>Upload Photo Passeport</title>
 
     <style>
-        /* Styles generaux */
+        /* Styles généraux */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -105,7 +103,7 @@
             background-color: #cc0000;
         }
 
-        /* Style pour le formulaire de filtrage */
+        /* Style pour le formulaire d'upload */
         form {
             background-color: #ffffff;
             padding: 1.5rem;
@@ -132,9 +130,9 @@
             width: 45%;
         }
 
-        form input[type="number"] {
-            width: 23%;
-            display: inline-block;
+        form input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
         }
 
         form button {
@@ -150,12 +148,6 @@
         form button:hover {
             background-color: #0066cc;
         }
-
-        /* Style des messages d'erreur */
-        .error {
-            color: red;
-            font-size: 1rem;
-        }
     </style>
 </head>
 <body>
@@ -169,64 +161,30 @@
         <div class="navigation">
             <%
                 Utilisateur user = (Utilisateur) session.getAttribute("user");
-                int idClient = (user != null) ? user.getId() : -1;
-
                 if (user != null) {
             %>
             <a href="/ticketing/frontOffice/dashboard">Tableau de bord</a>
             <a href="/ticketing/vol/listVolFront">Liste des vols</a>
-            <a href="/ticketing/reservation/formReservation">Faire une reservation</a>
-            <a href="/ticketing/reservation/listReservation?id=<%= user.getId() %>">Voir mes reservations</a>
+            <a href="/ticketing/reservation/formReservation">Faire une réservation</a>
+            <a href="/ticketing/reservation/listReservation?id=<%= user.getId() %>">Voir mes réservations</a>
             <a href="/ticketing/user/upload">Upload photo passeport</a>
             <% } else { %>
-            <p>Erreur : utilisateur non connecte.</p>
+            <p>Erreur : utilisateur non connecté.</p>
             <% } %>
         </div>
 
         <main class="content">
             <div class="new-container">
-                <%
-                    List<Vol> vols = (List<Vol>) request.getAttribute("vols");
-                    List<TypeSiege> typeSieges = (List<TypeSiege>) request.getAttribute("typeSieges");
+                <h2 class="my-4">Uploader votre photo de passeport</h2>
 
-                    if (vols != null && typeSieges != null && user != null) {
-                %>
-                <h2 class="my-4">Reserver un Vol</h2>
-
-                <form action="/ticketing/reservation/insert" method="post">
-                    <!-- ID Client cache -->
-                    <input type="hidden" name="reservation.idUtilisateur" value="<%= idClient %>">
-
-                    <!-- Selection du vol -->
-                    <label for="vol">Vol :</label>
-                    <select name="reservation.idVol" id="vol" required>
-                        <option value="">Choisir un vol</option>
-                        <% for (Vol vol : vols) { %>
-                            <option value="<%= vol.getId() %>"><%= vol.getDesignation() %></option>
-                        <% } %>
-                    </select>
-
-                    <br><br>
-
-                    <!-- Selection du type de siege -->
-                    <label for="typeSiege">Type de Siege :</label>
-                    <select name="reservation.idTypeSiege" id="typeSiege" required>
-                        <option value="">Choisir un type de siege</option>
-                        <% for (TypeSiege type : typeSieges) { %>
-                            <option value="<%= type.getId() %>"><%= type.getDesignation() %></option>
-                        <% } %>
-                    </select>
-
-                    <br><br>
-
-                    <input type="submit" value="Reserver le Vol">
+                <form action="/ticketing/user/uploading" method="post" enctype="multipart/form-data">
+                    <label for="fichier">Sélectionnez une image :</label><br>
+                    <input type="hidden" name="user_id" value="<%= user != null ? user.getId() : "" %>">
+                    <input type="file" name="fichier" id="fichier" accept="image/png, image/jpeg" required><br><br>
+                    <button type="submit">Uploader</button>
                 </form>
 
                 <a href="/ticketing/user/logout" class="logout">Logout</a>
-
-                <% } else { %>
-                <h2>Les donnees necessaires (vols, types de sieges ou client) sont manquantes.</h2>
-                <% } %>
             </div>
         </main>
     </div>
