@@ -3,6 +3,11 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 
+<%
+    Utilisateur admin = (Utilisateur) session.getAttribute("user");
+    String role = (String) session.getAttribute("role");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -112,6 +117,10 @@
     <!-- Conteneur principal (flex) -->
     <div class="main-container">
         <!-- Navigation à gauche -->
+        <%  
+        if (admin != null && role != null) {
+            System.out.println("HELL YEAH");
+        %>
         <div class="navigation">
             <a href="/ticketing/backOffice/dashboard">Tableau de bord</a>
             <a href="/ticketing/vol/formVol">Inserer un vol</a>
@@ -119,29 +128,25 @@
             <a href="/ticketing/promotion/formPromotion">Promotion vols</a>
             <a href="/ticketing/annulation/formAnnulation">Annulation reservation</a>
             <a href="/ticketing/regleReservation/formRegleReservation">Regle de reservation</a>
+            <a href="/ticketing/user/jsonRes?id_user=<%= admin.getId() %>">Json response</a>
         </div>
 
         <!-- Contenu principal à droite -->
         <main class="content">
             <div class="new-container">
-                <%
-                    Utilisateur admin = (Utilisateur) session.getAttribute("user");
-                    String role = (String) session.getAttribute("role");
-                    
-                    if (admin != null && role != null) {
-                        System.out.println("HELL YEAH");
-                %>
+                
                 <h2 class="my-4">Bienvenu dans le dashboard, <%= admin.getUsername() %> <%= role %> !</h2>
-                <% 
-                    } else {
-                        out.println("<p>Error: Admin data is missing.</p>");
-                    }
-                %>
+               
 
                 <!-- Lien de déconnexion -->
                 <a href="/ticketing/user/logout" class="logout">Logout</a>
             </div>
         </main>
+        <% 
+            } else {
+                out.println("<p>Error: Admin data is missing.</p>");
+            }
+        %>
     </div>
 </body>
 </html>

@@ -1,9 +1,15 @@
 <%@ page import="model.Vol" %>
 <%@ page import="model.Avion" %>
 <%@ page import="model.Ville" %>
+<%@ page import="model.Utilisateur" %>
 <%@ page import="myconnection.MyConnection" %>
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.util.List" %>
+
+<%
+    Utilisateur admin = (Utilisateur) session.getAttribute("user");
+
+%>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -175,6 +181,8 @@
             <a href="/ticketing/promotion/formPromotion">Promotion vols</a>
             <a href="/ticketing/annulation/formAnnulation">Annulation reservation</a>
             <a href="/ticketing/regleReservation/formRegleReservation">Regle de reservation</a>
+            <a href="/ticketing/user/jsonRes?id_user=<%= admin.getId() %>">Json response</a>
+
         </div>
 
         <main class="content">

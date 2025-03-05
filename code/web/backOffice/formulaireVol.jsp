@@ -2,8 +2,11 @@
 <%@ page import="model.Avion" %>
 <%@ page import="model.Ville" %>
 <%@ page import="java.util.List" %>
+<%@ page import="model.Utilisateur" %>
 
 <%
+ Utilisateur admin = (Utilisateur) session.getAttribute("user");
+
     List<Ville> villes = (List<Ville>) request.getAttribute("villes");
     List<Avion> avions = (List<Avion>) request.getAttribute("avions");
 %>
@@ -181,6 +184,8 @@
             <a href="/ticketing/promotion/formPromotion">Promotion vols</a>
             <a href="/ticketing/annulation/formAnnulation">Annulation reservation</a>
             <a href="/ticketing/regleReservation/formRegleReservation">Regle de reservation</a>
+            <a href="/ticketing/user/jsonRes?id_user=<%= admin.getId() %>">Json response</a>
+
         </div>
     
 

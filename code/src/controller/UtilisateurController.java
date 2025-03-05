@@ -73,45 +73,20 @@ public class UtilisateurController {
         return "Authed";
     }
 
-
-    // @Post()
-    // @Url(url="/admin/checkLogin")
-    // public ModelView goToDashBoard(@Argument(name="admin") Admin admin ) 
-    // {
-    //     System.out.println(admin.getUsername()); 
-    //     System.out.println(admin.getMdp()); 
-    //     try(Connection conn = MyConnection.getConnection()) {
-    //         if(checkLogin(conn, admin.getUsername(), admin.getMdp())){
-    //             System.out.println("IF");
-
-    //             String level = getLevelByUsername(conn, admin.getUsername());
-    
-    //             HashMap<String, Object> data = new HashMap<>();
-
-    //             data.put("role",level);
-    
-    //             String url = "/backOffice/dashboard.jsp";
-    //             ModelView mv = new ModelView(url, data);
-    //             return mv;
-    //           }
-    //           else 
-    //           {
-    //             System.out.println("ELSE");
-    //             HashMap<String, Object> data = new HashMap<>();
-    //             data.put("error", "Invalid credentials");
-    //             String url = "/admin/login.jsp";
-    //             return new ModelView(url, data);
-    //           }
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         HashMap<String, Object> data = new HashMap<>();
-    //         data.put("error", "Invalid credentials");
-    //         String url = "/admin/login.jsp";
-    //         return new ModelView(url, data);
-    //     }
-    // }
-
-    
+    @Url(url="/user/jsonRes")
+    @RestApi()
+    @Get()
+    public String jsonRes(@Argument(name="id_user") int id_user){
+        try(Connection conn = MyConnection.getConnection()){
+            Utilisateur user = Utilisateur.getById(conn, id_user);
+            return "L'utilisateur "+user.getUsername()+" est connecté";
+        }
+        catch(Exception e){
+            e.printStackTrace(); // Pour le débogage
+            return "Aucune session utilisateur détéctée";
+        }
+       
+    }
 
     @Post()
     @Url(url="/user/checkLogin")
