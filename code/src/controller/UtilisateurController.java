@@ -24,6 +24,36 @@ public class UtilisateurController {
         return mv;
     }
 
+    @Url(url="/user/upload")
+    public ModelView upload() {
+        HashMap<String,Object> map = new HashMap<>();
+        String url = "/frontOffice/upload.jsp";
+        ModelView mv = new ModelView(url,map);
+        return mv;
+    }
+
+    @Url(url="/backOffice/dashboard")
+    public ModelView dashboardBack() {
+        HashMap<String,Object> map = new HashMap<>();
+        String url = "/backOffice/dashboard.jsp";
+        ModelView mv = new ModelView(url,map);
+        return mv;
+    }
+
+    @Url(url="/frontOffice/dashboard")
+    public ModelView dashboardFront() {
+        HashMap<String,Object> map = new HashMap<>();
+        String url = "/frontOffice/dashboard.jsp";
+        ModelView mv = new ModelView(url,map);
+        return mv;
+    }
+
+    @Url(url="/user/uploading")
+    @Post()
+    public String uploading() {
+        return "upload terminé";
+    }
+
     @Url(url="/user/logout")
     public ModelView logout(@Argument(name="mySession") MySession mySession)
     {
@@ -80,6 +110,8 @@ public class UtilisateurController {
     //         return new ModelView(url, data);
     //     }
     // }
+
+    
 
     @Post()
     @Url(url="/user/checkLogin")

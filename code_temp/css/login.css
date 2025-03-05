@@ -1,60 +1,51 @@
-/* Ajouter une image en arrière-plan et centrer le formulaire */
-body, html {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url('../img/grapes_wine.jpg');
-    background-size: cover;
-    background-position: center;
-    margin: 0;
-}
-
-.container {
-    max-width: 400px;
-}
-
-.divLogin {
-    width: 100%;
-    padding: 30px;
-    background-color: rgba(255, 255, 255, 0.8); /* Fond blanc semi-transparent */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.title {
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e0f7ff;
+    color: #003366;
     text-align: center;
-    margin-bottom: 20px;
-    color: #343a40;
-    font-weight: 600;
-    font-family: 'GreatVibes-Regular';
+    margin: 0;
+    padding: 0;
 }
 
-.form-control {
-    margin-bottom: 15px;
+/* Titre */
+h1 {
+    margin-top: 50px;
+    color: #002244;
 }
 
+/* Formulaire */
+form {
+    background-color: #ffffff;
+    width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 51, 102, 0.3);
+}
 
+/* Champs input */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #99c2ff;
+    border-radius: 5px;
+    font-size: 16px;
+}
 
-.login {
-    background-color: #570505; /* Rouge du thème */
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+/* Bouton de soumission */
+input[type="submit"] {
+    background-color: #0066cc;
     color: white;
-    font-weight: bold;
-    margin-top: 1.5%;
-    width: fit-content !important;
-     height: 30%;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-
-
-.login:hover {
-    background-color: #8b0000 !important; /* Rouge moins foncé au survol */
-}
-
-/* S'il y a un focus sur le bouton, il ne doit pas changer de couleur */
-.login:focus {
-    outline: none; /* Supprime la bordure de focus */
+input[type="submit"]:hover {
+    background-color: #004999;
 }
