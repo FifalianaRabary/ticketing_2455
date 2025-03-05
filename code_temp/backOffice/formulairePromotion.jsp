@@ -161,7 +161,7 @@
 
     <!-- En-tête du site -->
     <header>
-        CatchFlights
+        CatchFlights - BackOffice
     </header>
 
     <div class="main-container">

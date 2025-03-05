@@ -20,7 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Vols</title>
     <style>
-        /* Styles généraux */
+        /* Styles generaux */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -233,32 +233,32 @@
             <div class="new-container">
                 <h2 class="my-4">Recherche de Vols</h2>
                 <form method="POST" action="/ticketing/vol/filter">
-                    <label for="dateDepart">Date de départ :</label>
+                    <label for="dateDepart">Date de depart :</label>
                     <input type="date" id="dateDepart" name="dateDepart">
                     
-                    <label for="dateArrivee">Date d'arrivée :</label>
+                    <label for="dateArrivee">Date d'arrivee :</label>
                     <input type="date" id="dateArrivee" name="dateArrivee">
                     
-                    <label for="villeDepart">Ville de départ :</label>
+                    <label for="villeDepart">Ville de depart :</label>
                     <select id="villeDepart" name="villeDepart">
-                        <option value="">-- Sélectionner --</option>
+                        <option value="">-- Selectionner --</option>
                         <% for (Ville ville : villes) { %>
                             <option value="<%= ville.getId() %>"><%= ville.getDesignation() %></option>
                         <% } %>
                     </select>
                     
-                    <label for="villeArrivee">Ville d'arrivée :</label>
+                    <label for="villeArrivee">Ville d'arrivee :</label>
                     <select id="villeArrivee" name="villeArrivee">
-                        <option value="">-- Sélectionner --</option>
+                        <option value="">-- Selectionner --</option>
                         <% for (Ville ville : villes) { %>
                             <option value="<%= ville.getId() %>"><%= ville.getDesignation() %></option>
                         <% } %>
                     </select>
                     
-                    <label for="prixMinEco">Prix min économique (€) :</label>
+                    <label for="prixMinEco">Prix min economique (€) :</label>
                     <input type="number" id="prixMinEco" name="prixMinEco" step="0.01">
                     
-                    <label for="prixMaxEco">Prix max économique (€) :</label>
+                    <label for="prixMaxEco">Prix max economique (€) :</label>
                     <input type="number" id="prixMaxEco" name="prixMaxEco" step="0.01">
                     
                     <label for="prixMinBusiness">Prix min business (€) :</label>
@@ -269,7 +269,7 @@
                 
                     <label for="avion">Avion :</label>
                     <select id="avion" name="avion">
-                        <option value="">-- Sélectionner --</option>
+                        <option value="">-- Selectionner --</option>
                         <% for (Avion avion : avions) { %>
                             <option value="<%= avion.getId() %>"><%= avion.getDesignation() %></option>
                         <% } %>
@@ -282,13 +282,13 @@
                 <table border="1">
                     <thead>
                         <tr>
-                            <th>Désignation</th>
+                            <th>Designation</th>
                             <th>Avion</th>
-                            <th>Ville Départ</th>
-                            <th>Ville Arrivée</th>
-                            <th>Heure Départ</th>
-                            <th>Heure Arrivée</th>
-                            <th>Prix Économique</th>
+                            <th>Ville Depart</th>
+                            <th>Ville Arrivee</th>
+                            <th>Heure Depart</th>
+                            <th>Heure Arrivee</th>
+                            <th>Prix economique</th>
                             <th>Prix Business</th>
                             <th>Actions</th>
                         </tr>

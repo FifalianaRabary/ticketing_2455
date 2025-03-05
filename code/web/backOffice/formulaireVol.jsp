@@ -239,14 +239,14 @@
             
                     <br><br>
             
-                    <!-- Definition des prix pour chaque type de siège -->
-                    <h3>Definir les prix des sièges :</h3>
+                    <!-- Definition des prix pour chaque type de siege -->
+                    <h3>Definir les prix des sieges :</h3>
             
-                    <label for="prixEconomique">Prix Siège economique :</label>
+                    <label for="prixEconomique">Prix Siege economique :</label>
                     <input type="number" name="prixEconomique" id="prixEconomique" step="0.01" min="0" value="200" required>
                     <br><br>
             
-                    <label for="prixBusiness">Prix Siège Business :</label>
+                    <label for="prixBusiness">Prix Siege Business :</label>
                     <input type="number" name="prixBusiness" id="prixBusiness" step="0.01"  value="500" min="0" required>
                     <br><br>
             

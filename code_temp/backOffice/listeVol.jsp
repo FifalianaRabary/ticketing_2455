@@ -213,7 +213,7 @@
 <body>
     <!-- En-tête du site -->
     <header>
-        CatchFlights
+        CatchFlights - BackOffice
     </header>
 
     <!-- Conteneur principal (flex) -->
