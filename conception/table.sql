@@ -52,6 +52,15 @@ CREATE TABLE Prix_siege_vol(
 
 );
 
+CREATE TABLE Prix_vol_enfant(
+    id SERIAL PRIMARY KEY,
+    age_max INT NOT NULL,
+    id_vol INT REFERENCES Vol(id) ON DELETE SET NULL,
+    id_type_siege INT REFERENCES Type_siege(id) ON DELETE SET NULL,
+    pourcent DECIMAL(5,2) CHECK (pourcent >= 0 AND pourcent <= 100)
+
+);
+
 CREATE TABLE Place_dispo_vol(
     id SERIAL PRIMARY KEY,
     id_vol INT REFERENCES Vol(id) ON DELETE SET NULL,
@@ -103,4 +112,5 @@ CREATE TABLE Reservation (
     id_type_siege INT REFERENCES Type_siege(id) ON DELETE CASCADE,
     montant DECIMAL(10,2) CHECK (montant >= 0)
 );
+
 
