@@ -32,3 +32,6 @@
 - [Y] upload photo passeport
 
 
+# SUITE 
+## SPRING
+- [] parametrage differents tarifs pour enfant (age max) et adulte pour un vol : x% ihany no aloha pour un enfant

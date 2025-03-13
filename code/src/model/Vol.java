@@ -16,12 +16,26 @@ import java.text.SimpleDateFormat;
 
 
 public class Vol {
+
+
     private int id;
+
+    @Required()    
     private String designation;
+
+    @Required()
     private Timestamp dateHeureDepart;
+
+    @Required()
     private Timestamp dateHeureArrivee;
+
+    @Required()
     private int idAvion;
+
+    @Required()
     private int idVilleDepart;
+
+    @Required()
     private int idVilleArrivee;
 
     // Getters et Setters

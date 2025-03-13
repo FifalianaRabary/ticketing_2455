@@ -1,14 +1,21 @@
 <%@ page import="model.Vol" %>
 <%@ page import="model.Avion" %>
 <%@ page import="model.Ville" %>
-<%@ page import="java.util.List" %>
 <%@ page import="model.Utilisateur" %>
 
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+
 <%
- Utilisateur admin = (Utilisateur) session.getAttribute("user");
+    Utilisateur admin = (Utilisateur) session.getAttribute("user");
 
     List<Ville> villes = (List<Ville>) request.getAttribute("villes");
     List<Avion> avions = (List<Avion>) request.getAttribute("avions");
+
+    HashMap<String, String> errors = (HashMap<String, String>) request.getAttribute("errors"); 
+
+    
 %>
 
 <!DOCTYPE html>

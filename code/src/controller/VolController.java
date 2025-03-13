@@ -191,7 +191,11 @@ public class VolController {
     
                 HashMap<String, Object> data = new HashMap<>();
                 String url = "/backOffice/dashboard.jsp";
-                return new ModelView(url, data);
+
+                ModelView mv = new ModelView(url,data);
+                mv.add("vol",vol);
+                mv.setErrorUrl("/backOffice/formVol");
+                return mv;
         } else {
                 System.out.println("ELSE");
                 HashMap<String, Object> data = new HashMap<>();
