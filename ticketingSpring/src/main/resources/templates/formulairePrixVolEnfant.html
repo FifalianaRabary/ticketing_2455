@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Prix Vol Enfant</title>
+</head>
+<body>
+
+<h1>Ajouter un Prix Vol Enfant</h1>
+
+<form action="/prixVolEnfant/ajouter" method="post">
+    <div>
+        <label for="ageMax">Âge Max :</label>
+        <input type="number" id="ageMax" name="ageMax" th:value="${prixVolEnfant.ageMax}" required>
+    </div>
+
+    <div>
+        <label for="idTypeSiege">Type de Siège :</label>
+    </div>
+
+    <div>
+        <label for="pourcent">Pourcentage :</label>
+        <input type="number" id="pourcent" name="pourcent" th:value="${prixVolEnfant.pourcent}" required>
+    </div>
+
+    <button type="submit">Ajouter</button>
+</form>
+
+<div>
+    <p th:text="${message}"></p>
+</div>
+
+</body>
+</html>
