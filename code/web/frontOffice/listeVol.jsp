@@ -5,8 +5,9 @@
 <%@ page import="model.Utilisateur" %>
 <%@ page import="myconnection.MyConnection" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.sql.Connection" %>
+<%@ page import="java.text.DecimalFormat" %>
+
 
 <%
     List<Vol> vols = (List<Vol>) request.getAttribute("vols");
@@ -297,17 +298,26 @@
                                         double prixEco = vol.getPrixSiege(conn, 1);
                                         double prixBusiness = vol.getPrixSiege(conn, 2);
                         %>
-                            <tr>
-                                <td><%= vol.getDesignation() %></td>
-                                <td><%= avion.getDesignation() %></td>
-                                <td><%= villeDepart.getDesignation() %></td>
-                                <td><%= villeArrivee.getDesignation() %></td>
-                                <td><%= vol.getDateHeureDepart() %></td>
-                                <td><%= vol.getDateHeureArrivee() %></td>
-                                <td><%= df.format(prixEco) %> €</td>
-                                <td><%= df.format(prixBusiness) %> €</td>
-                                <td><a href="/ticketing/reservation/reserver?id=<%= vol.getId() %>">Réserver</a></td>
-                            </tr>
+                        <tr>
+                            <td><%= vol.getDesignation() %></td>
+                            <td><%= avion.getDesignation() %></td>
+                            <td><%= villeDepart.getDesignation() %></td>
+                            <td><%= villeArrivee.getDesignation() %></td>
+                            <td><%= vol.getDateHeureDepart() %></td>
+                            <td><%= vol.getDateHeureArrivee() %></td>
+                            <td><%= df.format(prixEco) %> €</td>
+                            <td><%= df.format(prixBusiness) %> €</td>
+                            <td>
+                                <p><%= vol.estGuichetFerme(conn) %></p>
+                                <% 
+
+                                if (vol.estGuichetFerme(conn)) { %>
+                                    <span style="color: red; font-weight: bold;">Guichet fermé</span>
+                                <% } else { %>
+                                    <a href="/ticketing/reservation/formReservation1?idVol=<%= vol.getId() %>">Réserver</a>
+                                <% } %>
+                            </td>
+                        </tr>
                         <%
                                     }
                                 }

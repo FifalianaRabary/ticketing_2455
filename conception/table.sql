@@ -100,15 +100,44 @@ CREATE TABLE Utilisateur (
 
 
 
+-- vue pour voir place dispo par vol par  siège
+-- vue pour obtenir total d'une reservation
 
--- Création de la table Reservation
 CREATE TABLE Reservation (
     id SERIAL PRIMARY KEY,
-    id_utilisateur INT REFERENCES Utilisateur(id) ON DELETE CASCADE,
-    date_heure_reservation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_vol INT REFERENCES Vol(id) ON DELETE CASCADE,
-    id_type_siege INT REFERENCES Type_siege(id) ON DELETE CASCADE,
-    montant DECIMAL(10,2) CHECK (montant >= 0)
+    id_user INTEGER NOT NULL REFERENCES Utilisateur(id),
+    date_heure_reservation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_vol INTEGER NOT NULL REFERENCES Vol(id),
+    complete BOOLEAN NOT NULL DEFAULT FALSE,
+    nb_adulte INTEGER NOT NULL DEFAULT 1 CHECK (nb_adulte >= 0),
+    nb_enfant INTEGER NOT NULL DEFAULT 0 CHECK (nb_enfant >= 0)
 );
+
+-- Table Detail_reservation
+CREATE TABLE Detail_reservation (
+    id SERIAL PRIMARY KEY,
+    id_reservation INTEGER NOT NULL REFERENCES Reservation(id) ON DELETE CASCADE,
+    id_type_siege INTEGER NOT NULL REFERENCES Type_siege(id),
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    date_naissance DATE NOT NULL,
+    passeport VARCHAR(50),
+    montant DECIMAL(10,2) NOT NULL
+);
+
+
+
+
+-- -- Création de la table Reservation
+-- CREATE TABLE Reservation (
+--     id SERIAL PRIMARY KEY,
+--     id_utilisateur INT REFERENCES Utilisateur(id) ON DELETE CASCADE,
+--     date_heure_reservation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     id_vol INT REFERENCES Vol(id) ON DELETE CASCADE,
+--     id_type_siege INT REFERENCES Type_siege(id) ON DELETE CASCADE,
+--     montant DECIMAL(10,2) CHECK (montant >= 0)
+-- );
+
+
 
 

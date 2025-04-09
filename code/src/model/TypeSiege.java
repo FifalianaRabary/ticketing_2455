@@ -4,9 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import annotations.*;
-import session.MySession;
-import utils.ModelView;
+
 
 public class TypeSiege {
     private int id;

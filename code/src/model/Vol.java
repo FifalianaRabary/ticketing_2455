@@ -9,10 +9,10 @@ import javax.swing.plaf.nimbus.State;
 
 import annotations.*;
 import myconnection.MyConnection;
-import session.MySession;
-import utils.ModelView;
+
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 
 public class Vol {
@@ -425,6 +425,54 @@ public class Vol {
             System.out.println("Erreur lors de la décrémentation des places disponibles : " + e.getMessage());
             throw e;  
         }
+    }
+
+    public boolean estDansLesTemps(Connection conn) throws Exception 
+    {
+        RegleReservation regleReservation = RegleReservation.getByIdVol(conn, this.getId());
+
+        if ( regleReservation == null) {
+            System.out.println("Règle de réservation inexistante");
+            return false;
+        }
+
+        LocalDateTime heureDepart = this.getDateHeureDepart().toLocalDateTime();
+        LocalDateTime heureFinReservation = heureDepart.minusHours(regleReservation.getNbHeureLimiteAvantVol());
+        
+        System.out.println("Heure limite de réservation : " + heureFinReservation);
+        
+        return LocalDateTime.now().isBefore(heureFinReservation);
+    }
+
+    
+
+    public  boolean estGuichetFerme(Connection conn) {
+        int id_vol = getId();
+        boolean estFerme = true; // Par défaut, considérer comme fermé
+        
+        String sql = "SELECT SUM(nb) AS total_places_restantes " +
+                     "FROM Place_dispo_vol " +
+                     "WHERE id_vol = ?";
+    
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id_vol);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int placesRestantes = rs.getInt("total_places_restantes");
+                    // Si au moins une place disponible quelque part, le guichet est ouvert
+                    if (placesRestantes > 0) {
+                        estFerme = false;
+                    }
+                }
+                // Si aucun résultat (SUM retourne null), estFerme reste true
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // En cas d'erreur, considérer le guichet comme fermé par sécurité
+        }
+        
+        return estFerme;
     }
     
       
