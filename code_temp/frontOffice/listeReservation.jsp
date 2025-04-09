@@ -183,6 +183,7 @@
                             <th>Vol</th>
                             <th>Date et Heure de Réservation</th>
                             <th>Montant</th>
+                            <th>Details</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -198,7 +199,8 @@
                             <td><%= reservation.getId() %></td>
                             <td><%= vol != null ? vol.getDesignation() : "Vol inconnu" %></td>
                             <td><%= reservation.getDateHeureReservation() %></td>
-                            <td><%= df.format(reservation.getMontant()) %> €</td>
+                            <td><%= df.format(reservation.getMontant(conn,reservation.getId())) %> €</td>
+                            <td><a href="/ticketing/reservation/voirDetail?id=<%= reservation.getId() %>">Voir detail</a></td>
                             <td><a href="/ticketing/reservation/annulation?id=<%= reservation.getId() %>&id_user=<%= id_user %>">Annuler</a></td>
                         </tr>
                         <%

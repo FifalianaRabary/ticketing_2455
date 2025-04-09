@@ -104,6 +104,25 @@
         .logout:hover {
             background-color: #cc0000;
         }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
         
     </style>
 </head>
@@ -135,6 +154,19 @@
 
         <main class="content">
             <div class="new-container">
+                 <!-- Affichage des messages de succès -->
+                <% if (request.getAttribute("success") != null) { %>
+                    <div class="alert alert-success">
+                        <%= request.getAttribute("success") %>
+                    </div>
+                <% } %>
+
+                <!-- Affichage des messages d'erreur -->
+                <% if (request.getAttribute("error") != null) { %>
+                    <div class="alert alert-danger">
+                        <%= request.getAttribute("error") %>
+                    </div>
+                <% } %>
                 <%
                     if (user != null && role != null) {
                 %>

@@ -51,11 +51,34 @@
 - mail
 - mdp
 
-# Reservation
+(# Reservation
 - id
 - id_user
 - date heure reservation
 - id_vol
 - id_type_siege
 - montant
+)
 
+
+# Reservation
+- id
+- id_user (table utilisateur)
+- date heure reservation
+- nb_adulte
+- nb_enfant
+- id_vol (table vol)
+- montant
+- complete
+
+# Detail_reservation
+- id
+- id_reservation (table reservation)
+- id_type_siege (table type_siege)
+- nom
+- prenom
+- date_naissance
+- passeport
+
+
+# Vue pour connaitre le nb de place restant par vol par siege 

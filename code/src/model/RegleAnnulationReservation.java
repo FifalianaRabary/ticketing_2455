@@ -2,13 +2,9 @@ package model;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import annotations.*;
-import myconnection.MyConnection;
-import session.MySession;
-import utils.ModelView;
+
 
 public class RegleAnnulationReservation {
     private int id;
