@@ -168,6 +168,7 @@ public class ReservationController {
                         System.out.println("ATO AM IF 3");
                         if(detail.estCompleteEnfant(conn)){
                             System.out.println("ATO AM IF 4");
+                            data.put("typeSieges", typeSieges);
 
                             data.put("error", "Tous les details pour les passagers enfant ont déjà été insérés");
                             return new ModelView(url, data);
@@ -203,6 +204,7 @@ public class ReservationController {
 
                         if(detail.estCompleteAdulte(conn)){
                             System.out.println("ATO AM IF 5");
+                            data.put("typeSieges", typeSieges);
 
                             data.put("error", "Tous les details pour les passagers adultes ont déjà été insérés");
                             return new ModelView(url, data);
@@ -301,7 +303,10 @@ public class ReservationController {
             Reservation reservation = Reservation.getById(conn, id);
             Timestamp dateAnnulation = new Timestamp(System.currentTimeMillis());
 
+            System.out.println("AVANT ANNULATION");
             reservation.annulerReservation(conn,dateAnnulation);
+
+            System.out.println("APRES ANNULATION");
 
             HashMap<String,Object> map = new HashMap<>();
 

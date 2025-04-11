@@ -426,14 +426,18 @@ public class Reservation {
 
     public  void annulerReservation(Connection conn,Timestamp dateHeureAnnulation) throws Exception{
         if(estDansLesTempsAnnulation(conn, dateHeureAnnulation)){
-             
+             System.out.println("ANNULATION DANS LES TEMPS");
             List<DetailReservation> details = getAllDetail(conn);
             for(DetailReservation detail : details){
                 Vol.incrementerNbPlaceDispo(conn, idVol, detail.getIdTypeSiege());
                 detail.delete(conn);
+                System.out.println("DETAIL EFFACE");
+
             }
 
             delete(conn);
+
+            System.out.println("RESERVATION ANNULEE AVEC SUCCES");
         }
         else
         {

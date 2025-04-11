@@ -199,7 +199,6 @@
                             <th>Prénom</th>
                             <th>Date de naissance</th>
                             <th>Type de siège</th>
-                            <th>Passeport</th>
                             <th>Montant</th>
                             <th>Action</th>
                         </tr>
@@ -218,9 +217,8 @@
                             <td><%= detail.getPrenom() %></td>
                             <td><%= detail.getDateNaissance() %></td>
                             <td><%= typeSiege != null ? typeSiege.getDesignation() : "Inconnu" %></td>
-                            <td><%= detail.getPasseport() != null ? detail.getPasseport() : "Non renseigné" %></td>
                             <td><%= df.format(detail.getMontant()) %> €</td>
-                            <td><a href="/ticketing/detail/delete?id=<%= detail.getId() %>">Supprimer</a></td>
+                            <td><a href="/ticketing/detail/delete?id=<%= detail.getId() %>&idUser=<%= user.getId() %>">Supprimer</a></td>
 
                         </tr>
                         <%
