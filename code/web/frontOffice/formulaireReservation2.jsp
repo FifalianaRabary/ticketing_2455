@@ -202,7 +202,7 @@
                 <h2 class="my-4">Reserver un Vol : Etape 2</h2>
                 <h3>Inserez les détails</h3>
 
-                <form action="/ticketing/reservation/insertDetail" method="post">
+                <form action="/ticketing/reservation/insertDetail" method="post" enctype="multipart/form-data">
                     <!-- ID Client cache -->
                     <input type="hidden" name="detailReservation.idReservation" value="<%= idReservation %>">
                 
@@ -221,6 +221,8 @@
                         <label for="dateNaissance">Date de naissance :</label>
                         <input type="date" name="detailReservation.dateNaissance" id="dateNaissance" required>
                     </div>
+
+                    
                 
                     <!-- Selection du type de siege -->
                     <div class="form-group">
@@ -232,6 +234,12 @@
                             <% } %>
                         </select>
                     </div>
+
+
+                    <div class="form-group">
+                        <label for="fichier">Sélectionnez une image scan du passport :</label><br>
+                        <input type="file" name="fichier" id="fichier" accept="image/png, image/jpeg" required><br><br>
+                    </div>
                 
                     <input type="submit" value="ajouter détail" class="btn btn-primary">
                 </form>
@@ -239,7 +247,7 @@
                 <a href="/ticketing/user/logout" class="logout">Logout</a>
 
                 <% } else { %>
-                <h2>Les donnees necessaires (vols, types de sieges ou client) sont manquantes.</h2>
+                <h2>Les donnees necessaires ( types de sieges ou client) sont manquantes.</h2>
                 <% } %>
             </div>
         </main>

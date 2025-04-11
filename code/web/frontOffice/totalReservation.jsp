@@ -139,7 +139,7 @@
                 // Déclaration et initialisation de `user` et `role` en haut du fichier
                 Utilisateur user = (Utilisateur) session.getAttribute("user");
                 String role = (String) session.getAttribute("role");
-                double total = (Double) request.getAttribute("total");
+                Double total = (Double) request.getAttribute("total");
 
                 if (user != null && role != null) {
             %>
@@ -169,7 +169,7 @@
                     </div>
                 <% } %>
                 <%
-                    if (user != null && total != null) {
+                    if (user != null && total != null ) {
                 %>
                 <H1>Total :</H1>
                 <h2><%= total %></h2>

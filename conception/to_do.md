@@ -34,4 +34,9 @@
 
 # SUITE 
 ## SPRING
-- [] parametrage differents tarifs pour enfant (age max) et adulte pour un vol : x% ihany no aloha pour un enfant
+- [X] parametrage differents tarifs pour enfant (age max) et adulte pour un vol : x% ihany no aloha pour un enfant
+
+
+# SUITE
+## WEB-SERVICE (standard misy json etc.)
+- [] amlay liste reservation  misy lien télécharger pdf : pdf avec les info des passagers, vol, total 
